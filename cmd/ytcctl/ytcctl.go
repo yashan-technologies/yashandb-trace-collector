@@ -11,6 +11,7 @@ import (
 	"ytc/defs/compiledef"
 	"ytc/defs/confdef"
 	"ytc/defs/runtimedef"
+	"ytc/i18n"
 	"ytc/log"
 
 	"git.yasdb.com/go/yaserr"
@@ -46,6 +47,7 @@ func initLogger(logPath, level string) error {
 }
 
 func initApp(app App) error {
+	i18n.InitI18n(app.Lang)
 	if err := runtimedef.InitRuntime(); err != nil {
 		return err
 	}

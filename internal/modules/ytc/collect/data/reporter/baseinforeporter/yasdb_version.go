@@ -3,8 +3,9 @@ package baseinforeporter
 import (
 	"fmt"
 
-	"ytc/internal/modules/ytc/collect/baseinfo"
+	"ytc/i18n"
 	"ytc/internal/modules/ytc/collect/commons/datadef"
+	"ytc/internal/modules/ytc/collect/commons/i18nnames"
 	"ytc/internal/modules/ytc/collect/data/reporter/commons"
 	"ytc/internal/modules/ytc/collect/resultgenner/reporter"
 )
@@ -20,7 +21,7 @@ func NewYashanDBVersionReporter() YashanDBVersionReporter {
 
 // [Interface Func]
 func (r YashanDBVersionReporter) Report(item datadef.YTCItem, titlePrefix string) (content reporter.ReportContent, err error) {
-	title := fmt.Sprintf("%s %s", titlePrefix, baseinfo.BaseInfoChineseName[item.Name])
+	title := fmt.Sprintf("%s %s", titlePrefix, i18nnames.GetBaseInfoItemName(item.Name))
 	fontSize := reporter.FONT_SIZE_H2
 
 	// report error
@@ -41,5 +42,5 @@ func (r YashanDBVersionReporter) Report(item datadef.YTCItem, titlePrefix string
 }
 
 func (r YashanDBVersionReporter) genReportContentWriter(version string) reporter.Writer {
-	return commons.GenStringWriter("版本信息", version)
+	return commons.GenStringWriter(i18n.T("report.table_version_info"), version)
 }

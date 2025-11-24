@@ -8,10 +8,12 @@ import (
 	"time"
 
 	"ytc/defs/timedef"
+	"ytc/i18n"
 	"ytc/internal/modules/ytc/collect/baseinfo"
 	"ytc/internal/modules/ytc/collect/baseinfo/gopsutil"
 	"ytc/internal/modules/ytc/collect/baseinfo/sar"
 	"ytc/internal/modules/ytc/collect/commons/datadef"
+	"ytc/internal/modules/ytc/collect/commons/i18nnames"
 	"ytc/internal/modules/ytc/collect/data/reporter/commons"
 	"ytc/internal/modules/ytc/collect/resultgenner/reporter"
 	"ytc/internal/modules/ytc/collect/resultgenner/reporter/htmldef"
@@ -23,24 +25,18 @@ import (
 )
 
 const (
-	_graph_name_cpu_usage = "CPU使用率"
-
 	_graph_history_cpu_usage = "history_cpu_usage"
 	_graph_current_cpu_usage = "current_cpu_usage"
 )
 
 const (
 	// keys
-	_key_time  = "time"
-	_key_usage = "usage"
-
-	// lables
-	_label_usage = "使用率"
+	_key_time_cpu  = "time"
+	_key_usage_cpu = "usage"
 )
 
 var (
-	_yKeysCPU   = []string{_key_usage}
-	_yLabelsCPU = []string{_label_usage}
+	_yKeysCPU = []string{_key_usage_cpu}
 )
 
 // validate interface
@@ -64,7 +60,7 @@ func NewHostCPUUsageReporter() HostCPUUsageReporter {
 
 // [Interface Func]
 func (r HostCPUUsageReporter) Report(item datadef.YTCItem, titlePrefix string) (content reporter.ReportContent, err error) {
-	title := fmt.Sprintf("%s %s", titlePrefix, baseinfo.BaseInfoChineseName[item.Name])
+	title := fmt.Sprintf("%s %s", titlePrefix, i18nnames.GetBaseInfoItemName(item.Name))
 	fontSize := reporter.FONT_SIZE_H2
 	txt := reporter.GenTxtTitle(title)
 	markdown := reporter.GenMarkdownTitle(title, fontSize)
@@ -167,13 +163,13 @@ func (r HostCPUUsageReporter) genSarReportContent(sarData map[int64]map[string]s
 
 	tw := commons.ReporterWriter.NewTableWriter()
 	tw.AppendHeader(table.Row{
-		"时间",
-		"用户空间进程所花费的CPU时间(user)",
-		"以较低优先级运行的用户空间进程所花费的CPU时间(nice)",
-		"内核空间进程所花费的CPU时间(system)",
-		"CPU等待磁盘 I/O 完成的时间(iowait)",
-		"发生CPU窃取的时间(steal)",
-		"CPU处于空闲状态的时间(idle)",
+		i18n.T("report.time"),
+		i18n.T("report.cpu_user_time"),
+		i18n.T("report.cpu_nice_time"),
+		i18n.T("report.cpu_system_time"),
+		i18n.T("report.cpu_iowait_time"),
+		i18n.T("report.cpu_steal_time"),
+		i18n.T("report.cpu_idle_time"),
 	})
 	for _, key := range keys {
 		var rows []map[string]interface{}
@@ -192,16 +188,16 @@ func (r HostCPUUsageReporter) genSarReportContent(sarData map[int64]map[string]s
 				fmt.Sprintf("%.2f%%", p.Idle),
 			})
 			row := make(map[string]interface{})
-			row[_key_time] = time.Unix(p.timestamp, 0).Format(timedef.TIME_FORMAT)
-			row[_key_usage] = numutil.TruncateFloat64(100-p.Idle, 2)
+			row[_key_time_cpu] = time.Unix(p.timestamp, 0).Format(timedef.TIME_FORMAT)
+			row[_key_usage_cpu] = numutil.TruncateFloat64(100-p.Idle, 2)
 			rows = append(rows, row)
 		}
 		c := reporter.GenReportContentByWriter(tw)
 		content.Txt += c.Txt + stringutil.STR_NEWLINE
 		content.Markdown += c.Markdown + stringutil.STR_NEWLINE
 		content.HTML += c.HTML + stringutil.STR_NEWLINE
-		content.HTML += reporter.GenHTMLTitle(_graph_name_cpu_usage, reporter.FONT_SIZE_H4) + htmldef.GenGraphElement(graphName)
-		content.Graph = htmldef.GenGraphData(graphName, rows, _key_time, _yKeysCPU, _yLabelsCPU)
+		content.HTML += reporter.GenHTMLTitle(i18n.T("report.cpu_usage_graph"), reporter.FONT_SIZE_H4) + htmldef.GenGraphElement(graphName)
+		content.Graph = htmldef.GenGraphData(graphName, rows, _key_time_cpu, _yKeysCPU, []string{i18n.T("report.label_usage")})
 		tw.ResetRows()
 	}
 	return
@@ -227,16 +223,16 @@ func (r HostCPUUsageReporter) genGopsutilReportContent(gopsutilData map[int64]ma
 
 	tw := commons.ReporterWriter.NewTableWriter()
 	tw.AppendHeader(table.Row{
-		"时间",
-		"用户空间进程所花费的CPU时间(user)",
-		"以较低优先级运行的用户空间进程所花费的CPU时间(nice)",
-		"内核空间进程所花费的CPU时间(system)",
-		"CPU等待磁盘 I/O 完成的时间(iowait)",
-		"发生CPU窃取的时间(steal)",
-		"CPU处于空闲状态的时间(idle)",
-		"处理硬件中断的时间",
-		"处理软件中断的时间",
-		"运行虚拟机所花费的CPU时间",
+		i18n.T("report.time"),
+		i18n.T("report.cpu_user_time"),
+		i18n.T("report.cpu_nice_time"),
+		i18n.T("report.cpu_system_time"),
+		i18n.T("report.cpu_iowait_time"),
+		i18n.T("report.cpu_steal_time"),
+		i18n.T("report.cpu_idle_time"),
+		i18n.T("report.cpu_interrupt_time"),
+		i18n.T("report.cpu_softirq_time"),
+		i18n.T("report.cpu_guest_time"),
 	})
 	for _, key := range keys {
 		var rows []map[string]interface{}
@@ -259,23 +255,23 @@ func (r HostCPUUsageReporter) genGopsutilReportContent(gopsutilData map[int64]ma
 				fmt.Sprintf("%.2f%%", p.Guest),
 			})
 			row := make(map[string]interface{})
-			row[_key_time] = time.Unix(p.timestamp, 0).Format(timedef.TIME_FORMAT)
-			row[_key_usage] = numutil.TruncateFloat64(100-p.Idle, 2)
+			row[_key_time_cpu] = time.Unix(p.timestamp, 0).Format(timedef.TIME_FORMAT)
+			row[_key_usage_cpu] = numutil.TruncateFloat64(100-p.Idle, 2)
 			rows = append(rows, row)
 		}
 		c := reporter.GenReportContentByWriter(tw)
 		content.Txt += c.Txt + stringutil.STR_NEWLINE
 		content.Markdown += c.Markdown + stringutil.STR_NEWLINE
 		content.HTML += c.HTML + stringutil.STR_NEWLINE
-		content.HTML += reporter.GenHTMLTitle(_graph_name_cpu_usage, reporter.FONT_SIZE_H4) + htmldef.GenGraphElement(graphName)
-		content.Graph = htmldef.GenGraphData(graphName, rows, _key_time, _yKeysCPU, _yLabelsCPU)
+		content.HTML += reporter.GenHTMLTitle(i18n.T("report.graph_cpu_usage"), reporter.FONT_SIZE_H4) + htmldef.GenGraphElement(graphName)
+		content.Graph = htmldef.GenGraphData(graphName, rows, _key_time_cpu, _yKeysCPU, []string{i18n.T("report.label_usage")})
 		tw.ResetRows()
 	}
 	return
 }
 
 func (r HostCPUUsageReporter) genHistoryContent(historyItem datadef.YTCItem, titlePrefix string) (historyItemContent reporter.ReportContent, err error) {
-	title := fmt.Sprintf("%s.1 %s", titlePrefix, baseinfo.BaseInfoChildChineseName[baseinfo.KEY_HISTORY])
+	title := fmt.Sprintf("%s.1 %s", titlePrefix, i18nnames.GetBaseInfoChildItemName(baseinfo.KEY_HISTORY))
 	fontSize := reporter.FONT_SIZE_H3
 	if len(historyItem.Error) != 0 {
 		ew := commons.ReporterWriter.NewErrorWriter(historyItem.Error, historyItem.Description)
@@ -297,7 +293,7 @@ func (r HostCPUUsageReporter) genHistoryContent(historyItem datadef.YTCItem, tit
 }
 
 func (r HostCPUUsageReporter) genCurrentContent(currentItem datadef.YTCItem, titlePrefix string) (currentItemContent reporter.ReportContent, err error) {
-	title := fmt.Sprintf("%s.2 %s", titlePrefix, baseinfo.BaseInfoChildChineseName[baseinfo.KEY_CURRENT])
+	title := fmt.Sprintf("%s.2 %s", titlePrefix, i18nnames.GetBaseInfoChildItemName(baseinfo.KEY_CURRENT))
 	fontSize := reporter.FONT_SIZE_H3
 	if len(currentItem.Error) != 0 {
 		ew := commons.ReporterWriter.NewErrorWriter(currentItem.Error, currentItem.Description)

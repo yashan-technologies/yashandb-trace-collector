@@ -12,6 +12,7 @@ import (
 	"ytc/defs/errdef"
 	"ytc/defs/regexdef"
 	"ytc/defs/runtimedef"
+	"ytc/i18n"
 	"ytc/log"
 	"ytc/utils/fileutil"
 	"ytc/utils/jsonutil"
@@ -43,10 +44,6 @@ var (
 		"1h",
 		"1m",
 	}
-
-	_range_help = "you must ensure that the number before (M|d|h|m) is greater than 0"
-
-	_type_help = "you can choose one or more of (base|diag|perf), split with ',', such as 'base,diag,perf'."
 )
 
 func (c *CollectCmd) validate() error {
@@ -79,7 +76,7 @@ func (c *CollectCmd) validateType() error {
 	types := strings.Split(c.Type, stringutil.STR_COMMA)
 	for _, t := range types {
 		if _, ok := tMap[t]; !ok {
-			return errdef.NewErrYtcFlag(f_type, c.Type, nil, _type_help)
+			return errdef.NewErrYtcFlag(f_type, c.Type, nil, i18n.T("validate.type_help"))
 		}
 		resMap[t] = struct{}{}
 	}
@@ -112,10 +109,10 @@ func (c *CollectCmd) checkInclude(include string) error {
 			continue
 		}
 		if fileutil.IsAncestorDir(include, invalidPath) {
-			return fmt.Errorf("could not collect: %s, because it contails the invalid path: %s", include, invalidPath)
+			return fmt.Errorf(i18n.TWithData("validate.include_contains_invalid", map[string]interface{}{"Include": include, "InvalidPath": invalidPath}))
 		}
 		if fileutil.IsAncestorDir(invalidPath, include) {
-			return fmt.Errorf("could not collect: %s, because the invalid path: %s contails it", include, invalidPath)
+			return fmt.Errorf(i18n.TWithData("validate.invalid_contains_include", map[string]interface{}{"Include": include, "InvalidPath": invalidPath}))
 		}
 	}
 	return nil
@@ -139,7 +136,7 @@ func (c *CollectCmd) validateRange() error {
 		return nil
 	}
 	if !regexdef.RangeRegex.MatchString(c.Range) {
-		return errdef.NewErrYtcFlag(f_range, c.Range, _exmaples_range, _range_help)
+		return errdef.NewErrYtcFlag(f_range, c.Range, _exmaples_range, i18n.T("validate.range_help"))
 	}
 	minDuration, maxDuration, err := strategyConf.Collect.GetMinAndMaxDur()
 	if err != nil {

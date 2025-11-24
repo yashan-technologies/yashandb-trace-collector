@@ -4,9 +4,10 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"ytc/i18n"
 	"ytc/internal/modules/ytc/collect/commons/datadef"
+	"ytc/internal/modules/ytc/collect/commons/i18nnames"
 	"ytc/internal/modules/ytc/collect/data/reporter/commons"
-	"ytc/internal/modules/ytc/collect/diagnosis"
 	"ytc/internal/modules/ytc/collect/resultgenner/reporter"
 	"ytc/internal/modules/ytc/collect/yasdb"
 
@@ -25,7 +26,7 @@ func NewYashanDBDatabaseStatusReporter() YashanDBDatabaseStatusReporter {
 
 // [Interface Func]
 func (r YashanDBDatabaseStatusReporter) Report(item datadef.YTCItem, titlePrefix string) (content reporter.ReportContent, err error) {
-	title := fmt.Sprintf("%s %s", titlePrefix, diagnosis.DiagChineseName[item.Name])
+	title := fmt.Sprintf("%s %s", titlePrefix, i18nnames.GetDiagItemName(item.Name))
 	fontSize := reporter.FONT_SIZE_H2
 
 	// report error
@@ -73,7 +74,7 @@ func (r YashanDBDatabaseStatusReporter) parseYashanDBVDatabase(item datadef.YTCI
 
 func (r YashanDBDatabaseStatusReporter) genReportContentWriter(database *yasdb.VDatabase) reporter.Writer {
 	tw := commons.ReporterWriter.NewTableWriter()
-	tw.AppendHeader(table.Row{"状态", "开启模式"})
+	tw.AppendHeader(table.Row{i18n.T("report.db_status"), i18n.T("report.db_open_mode")})
 
 	tw.AppendRow(table.Row{database.Status, database.OpenMode})
 	return tw

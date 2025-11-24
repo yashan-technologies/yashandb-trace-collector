@@ -1,0 +1,955 @@
+[form.save]
+other = "Save"
+
+[form.quit]
+other = "Quit"
+
+[form.enter_header]
+other = "Enter Yashan Trace Collector Data"
+
+[form.yasdb_internal_data_not_collect]
+other = "yasdb internal data will not be collected, are you sure to continue?"
+
+[form.please_enter]
+other = "please enter {{.Label}}"
+
+[form.button_continue]
+other = "Continue"
+
+[form.button_back]
+other = "Back"
+
+[collect.stopping]
+other = "Stopping Collect..."
+
+[collect.quitting]
+other = "Quit Collect"
+
+[collect.starting]
+other = "Starting collect..."
+
+[collect.starting_collect]
+other = "Starting collect..."
+
+[collect.tips_for_you]
+other = "There are some tips for you"
+
+[collect.header_type]
+other = "TYPE"
+
+[collect.header_item]
+other = "COLLECT_ITEM"
+
+[collect.header_desc]
+other = "DESCRIPTION"
+
+[collect.header_tips]
+other = "TIPS"
+
+[collect.header_collected]
+other = "COLLECTED?"
+
+[collect.continue_confirm]
+other = "\nAre you want continue collect [y/n] ?\n"
+
+[collect.validation_failed]
+other = "some validations failed, not continue collect"
+
+[collect.following_modules]
+other = "The following modules will be collected"
+
+[collect.packing_results]
+other = "Packing collected results, please wait for a moment..."
+
+[collect.gen_result_failed]
+other = "failed to gen result, err: {{.Err}}"
+
+[collect.completed_msg]
+other = "The collection has been {{.Status}} and the result was saved to {{.Path}}, thanks for your use."
+
+[collect.completed]
+other = "completed"
+
+[collect.progress_done]
+other = "done"
+
+[collect.progress_collecting]
+other = "collecting"
+
+[collect.item_completed]
+other = "has been completed"
+
+[collect.item_failed]
+other = "has been failed"
+
+[app.header_key]
+other = "KEY"
+
+[app.header_value]
+other = "VALUE"
+
+[app.info]
+other = "App Information"
+
+[app.version]
+other = "App Version"
+
+[app.go_version]
+other = "Go Version"
+
+[app.git_commit]
+other = "Git Commit"
+
+[app.git_describe]
+other = "Git Describe"
+
+[err.none_collect_item]
+other = "no collection items will be collected, skip this collection"
+
+[validate.include_contains_invalid]
+other = "could not collect: {{.Include}}, because it contains the invalid path: {{.InvalidPath}}"
+
+[validate.invalid_contains_include]
+other = "could not collect: {{.Include}}, because the invalid path: {{.InvalidPath}} contains it"
+
+[validate.range_help]
+other = "you must ensure that the number before (M|d|h|m) is greater than 0"
+
+[validate.type_help]
+other = "you can choose one or more of (base|diag|perf), split with ',', such as 'base,diag,perf'."
+
+[err.flag_invalid]
+other = "The value of {{.Flag}}: {{.Value}} is invalid"
+
+[err.flag_available_formats]
+other = ", the available input formats are as follows: [{{.Examples}}]"
+
+[err.end_less_start]
+other = "start time should be less than end time"
+
+[err.start_should_less_curr]
+other = "start time should be less current time"
+
+[err.greater_max_dur]
+other = "end-start time should be less than {{.MaxDuration}}, you can modify the configuration file ./config/strategy.toml 'max_duration'"
+
+[err.less_min_dur]
+other = "end-start time should be greater than {{.MinDuration}}, you can modify the configuration file ./config/strategy.toml 'min_duration'"
+
+[err.path_format]
+other = "path format error, please check"
+
+[err.file_not_found]
+other = "{{.Fname}} is not existed"
+
+[err.file_parse_failed]
+other = "parse {{.Fname}} failed: {{.Err}}"
+
+[err.cmd_not_exist]
+other = "command: {{.Cmd}} not exist"
+
+[err.cmd_need_root]
+other = "command: {{.Cmd}} need run with sudo or root"
+
+[err.permission_denied]
+other = "the current user {{.User}} does not have permission to: {{.FileName}}"
+
+# Common module messages
+[common.file_not_exist_desc]
+other = "{{.Path}} not exist"
+
+[common.file_permission_denied_desc]
+other = "current user: {{.User}} stat: {{.Path}} permission denied"
+
+[common.file_not_exist_tips]
+other = "you can check if {{.Path}} exists"
+
+[common.item_empty_tips]
+other = "you can run 'ytcctl collect' and fill yashandb user and yashandb password"
+
+[common.file_permission_tips]
+other = "you can check whether the current user has access to {{.Path}}, and use the user who belongs to this file to execute 'ytcctl collect'"
+
+[common.database_not_open_tips]
+other = "you can open the database first"
+
+[common.invalid_user_password_tips]
+other = "you can enter a correct username and password"
+
+[common.lack_login_permission_tips]
+other = "you can grant the user the 'Create Session' permission"
+
+[common.lack_necessary_permission_tips]
+other = "you can ask the database administrator or designated security administrator to grant the user the necessary privileges"
+
+[common.object_not_exist_tips]
+other = "the object does not exist, please enter the correct object name"
+
+[common.yas_other_tips]
+other = "you can refer to the official documentation, view the error message, and then check the database"
+
+[common.connect_failed_tips]
+other = "you can check process of yashandb"
+
+[common.login_error]
+other = "login yasdb failed: {{.Error}}"
+
+[common.run_with_sudo_tips]
+other = "you can run 'sudo ytcctl collect'"
+
+[common.run_with_root_tips]
+other = "you can run 'ytcctl collect' with root"
+
+# Base module messages
+[base.sar_not_exist_tips]
+other = "historical load information may not be collected, and current load information will be collected by default, or you can run {{.InstallCmd}}"
+
+[base.yasdb_instance_status_tips]
+other = "matched yasdb process with: {{.Process}}, default collect from process cmdline"
+
+[base.get_osrelease_error_desc]
+other = "get os release err: {{.Error}}"
+
+[base.default_parameter_tips]
+other = "default to collect parameter from {{.Path}}"
+
+# Diagnosis module messages
+[diag.bash_history_desc]
+other = "The data source of bash history is the $HISTFILE file."
+
+[diag.bash_history_tips]
+other = "if you need to keep the history of the current terminal, please execute 'history -a' first."
+
+[diag.bash_history_no_permission]
+other = "has no permission to collect bash history of root"
+
+[diag.default_adr_tips]
+other = "default collect adr from: {{.Path}}"
+
+[diag.match_process_error_desc]
+other = "match yasdb process with: {{.Condition}} err: {{.Error}}"
+
+[diag.match_process_error_tips]
+other = "you can try again later"
+
+[diag.process_not_found_desc]
+other = "process no found, match yasdb process with: {{.Condition}}"
+
+[diag.process_not_found_tips]
+other = "you can check yasdb status"
+
+[diag.default_runlog_tips]
+other = "default collect run.log from: {{.Path}}"
+
+[diag.coredump_error_desc]
+other = "get coredump path err: {{.Error}}"
+
+[diag.coredump_relative_desc]
+other = "current core pattern: {{.Pattern}} is relative path"
+
+[diag.coredump_relative_tips]
+other = "default to: {{.Path}} collect core file"
+
+[diag.get_syslog_error_desc]
+other = "get system err: {{.Error}}"
+
+[diag.syslog_not_found_desc]
+other = "both of {{.Path1}} and {{.Path2}} are not exist"
+
+[diag.syslog_not_found_tips]
+other = "do not collect system log"
+
+[diag.dmesg_need_root_desc]
+other = "command dmesg need root"
+
+# Performance module messages
+[perf.user_not_sys_desc]
+other = "the current yashandb user: {{.User}} is not 'SYS'"
+
+[perf.user_not_sys_tips]
+other = "you can change yashandb user to 'SYS'"
+
+[perf.default_slowsql_tips]
+other = "default collect slow.log from {{.Path}}"
+
+[perf.awr_timeout_desc]
+other = "it may take a long time to generate an AWR report."
+
+[perf.awr_timeout_tips]
+other = "we have defined the timeout period: {{.Timeout}} for collecting AWR report, you can modify strategy.toml 'awr_timeout' to customize the timeout period"
+
+[perf.awr_skip_tips]
+other = "the database is not in readwrite mode, skip to generate AWR report"
+
+[perf.no_satisfied_snap_desc]
+other = "no satisfied snapshot id"
+
+[perf.no_satisfied_tips]
+other = "you can increase the collection interval appropriately"
+
+# Description messages
+[desc.default]
+other = "please check YTC product documentation or logs to locate the cause"
+
+[desc.no_sar_command]
+other = "sar command not found, please check if sar is installed"
+
+[desc.no_permission]
+other = "{{.Path}} does not exist or no permission, please check file permissions"
+
+[desc.ubuntu_firewalld]
+other = "viewing Ubuntu system firewall status requires root permission"
+
+[desc.kylin_dmesg]
+other = "failed to execute dmesg command, please check logs to locate the specific cause"
+
+[desc.read_coredump_path]
+other = "failed to read coredump folder: {{.Path}}, please check file permissions or view logs to locate the specific cause"
+
+[desc.get_coredump_path]
+other = "failed to get system coredump path, please check logs for the cause or manually modify YTC configuration file to set coredump path"
+
+[desc.get_database_parameter]
+other = "failed to get database {{.Parameter}} parameter, please check database status or view YTC logs to locate the cause"
+
+[desc.skip_collect_database_info]
+other = "database connection failed, will skip this check item"
+
+[desc.yasdb_process_status]
+other = "failed to get database process information, please check if database process exists"
+
+[desc.get_database_view]
+other = "failed to query database {{.View}} view, please check database status or view YTC logs to locate the cause"
+
+[desc.no_permission_syslog]
+other = "no permission to collect system log"
+
+# ==================== Report Module Names ====================
+[report.module_baseinfo]
+other = "Basic Information"
+
+[report.module_diagnosis]
+other = "Diagnostic Information"
+
+[report.module_performance]
+other = "Performance Tuning Information"
+
+[report.module_extra]
+other = "Extra Collection Items"
+
+# ==================== Report BaseInfo Items ====================
+[report.base_yasdb_version]
+other = "Database Version"
+
+[report.base_yasdb_parameter]
+other = "Database Configuration"
+
+[report.base_host_os_info]
+other = "Operating System Information"
+
+[report.base_host_firewalld]
+other = "Firewall Configuration"
+
+[report.base_host_cpu]
+other = "CPU"
+
+[report.base_host_disk]
+other = "Disk"
+
+[report.base_host_network]
+other = "Network Configuration"
+
+[report.base_host_memory]
+other = "Memory"
+
+[report.base_host_network_io]
+other = "Network Traffic"
+
+[report.base_host_cpu_usage]
+other = "CPU Usage Analysis"
+
+[report.base_host_disk_io]
+other = "Disk I/O"
+
+[report.base_host_memory_usage]
+other = "Memory Capacity Check"
+
+# ==================== Report BaseInfo Child Items ====================
+[report.base_yasdb_ini]
+other = "Database Instance Configuration File: yasdb.ini"
+
+[report.base_yasdb_parameter_view]
+other = "Database Instance Parameter View: v$parameter"
+
+[report.base_history]
+other = "Historical Load"
+
+[report.base_current]
+other = "Current Load"
+
+# ==================== Report Diagnosis Items ====================
+[report.diag_yasdb_adr]
+other = "Database ADR Log"
+
+[report.diag_yasdb_runlog]
+other = "Database run.log"
+
+[report.diag_yasdb_alertlog]
+other = "Database alert.log"
+
+[report.diag_yasdb_process_status]
+other = "Database Process Information"
+
+[report.diag_yasdb_instance_status]
+other = "Database Instance Status"
+
+[report.diag_yasdb_database_status]
+other = "Database Status"
+
+[report.diag_host_systemlog]
+other = "Operating System Log"
+
+[report.diag_host_kernellog]
+other = "Operating System Kernel Log"
+
+[report.diag_yasdb_coredump]
+other = "CoreDump"
+
+[report.diag_host_bash_history]
+other = "Operating System Bash History"
+
+# ==================== Report Performance Items ====================
+[report.perf_yasdb_awr]
+other = "AWR Report"
+
+[report.perf_yasdb_slowsql]
+other = "Slow SQL"
+
+# ==================== Report Performance Child Items ====================
+[report.perf_slowsql_parameter]
+other = "Slow SQL Parameters"
+
+[report.perf_slowsql_table]
+other = "SLOW_LOG$ System Table"
+
+[report.perf_slowsql_file]
+other = "Slow SQL Log File"
+
+# ==================== Report Overview ====================
+[report.overview_title]
+other = "Report Overview"
+
+[report.basic_overview]
+other = "Basic Overview"
+
+[report.items_overview]
+other = "Collection Items Overview"
+
+[report.overview_item]
+other = "Overview Item"
+
+[report.overview_value]
+other = "Overview Value"
+
+[report.collect_type]
+other = "Collection Type"
+
+[report.collect_range_start]
+other = "Collection Range - Start Time"
+
+[report.collect_range_end]
+other = "Collection Range - End Time"
+
+[report.yasdb_home]
+other = "YashanDB Information - YASDB_HOME"
+
+[report.yasdb_data]
+other = "YashanDB Information - YASDB_DATA"
+
+[report.database_user]
+other = "Database User (for collecting YashanDB information)"
+
+[report.extra_files]
+other = "Extra Collection Files"
+
+[report.filtered_files]
+other = "Filtered Collection Files"
+
+[report.output_dir]
+other = "Collection Result Output Directory"
+
+[report.task_start_time]
+other = "Task Start Time"
+
+[report.task_end_time]
+other = "Task End Time"
+
+# ==================== Report Table Headers ====================
+[report.table_check_item]
+other = "Check Item"
+
+[report.table_check_result]
+other = "Check Result"
+
+[report.table_version_info]
+other = "Version Information"
+
+[report.table_firewall_status]
+other = "Firewall Status"
+
+# ==================== Report Field Names ====================
+[report.field_hostname]
+other = "Hostname"
+
+[report.field_boot_time]
+other = "Boot Time"
+
+[report.field_os]
+other = "Operating System"
+
+[report.field_platform]
+other = "Distribution"
+
+[report.field_platform_family]
+other = "Family"
+
+[report.field_kernel_version]
+other = "Kernel Version"
+
+[report.field_kernel_arch]
+other = "Kernel Architecture"
+
+[report.field_cpu_model]
+other = "CPU Model"
+
+[report.field_cpu_cores]
+other = "CPU Cores"
+
+[report.field_physical_cores]
+other = "Physical CPU Cores"
+
+[report.field_logical_cores]
+other = "Logical CPU Cores"
+
+[report.field_cpu_frequency]
+other = "CPU Frequency"
+
+[report.field_vendor_id]
+other = "Vendor ID"
+
+[report.field_disk_device]
+other = "Disk Device"
+
+[report.field_filesystem_type]
+other = "Filesystem Type"
+
+[report.field_disk_size]
+other = "Disk Size"
+
+[report.field_used]
+other = "Used"
+
+[report.field_available]
+other = "Available"
+
+[report.field_usage_rate]
+other = "Usage Rate"
+
+[report.field_mount_path]
+other = "Mount Path"
+
+[report.field_mount_options]
+other = "Mount Options"
+
+[report.field_memory_size]
+other = "Memory Size"
+
+[report.field_free]
+other = "Free"
+
+[report.field_shared_memory]
+other = "Shared Memory"
+
+[report.field_buffer_cache]
+other = "Buffer/Cache"
+
+[report.field_system_memory]
+other = "System Memory"
+
+[report.field_swap_memory]
+other = "Swap Memory"
+
+# ==================== Report Status Values ====================
+[report.status_disabled]
+other = "Disabled"
+
+[report.status_enabled]
+other = "Enabled"
+
+# ==================== Report Graph Names ====================
+[report.graph_cpu_usage]
+other = "CPU Usage"
+
+[report.graph_memory_usage]
+other = "Memory Usage"
+
+# ==================== Report Labels ====================
+[report.label_usage]
+other = "Usage"
+
+[report.label_real_usage]
+other = "Real Usage"
+
+# ==================== Report CPU Usage Descriptions ====================
+[report.cpu_user_time]
+other = "CPU time spent in user space processes (user)"
+
+[report.cpu_nice_time]
+other = "CPU time spent in user space processes with lower priority (nice)"
+
+[report.cpu_idle_time]
+other = "CPU idle time (idle)"
+
+[report.cpu_interrupt_time]
+other = "Time spent handling hardware interrupts"
+
+[report.cpu_system_time]
+other = "system"
+
+[report.cpu_iowait_time]
+other = "iowait"
+
+[report.cpu_steal_time]
+other = "steal"
+
+[report.cpu_softirq_time]
+other = "softirq"
+
+[report.cpu_guest_time]
+other = "guest"
+
+[report.time]
+other = "Time"
+
+[report.cpu_usage_graph]
+other = "CPU Usage Graph"
+
+# ==================== Report Disk IO Descriptions ====================
+[report.label_disk_iops]
+other = "IOPS"
+
+[report.label_disk_read]
+other = "Disk Read(KB/S)"
+
+[report.label_disk_write]
+other = "Disk Write(KB/S)"
+
+[report.graph_disk_iops]
+other = "IOPS"
+
+[report.graph_disk_read_write]
+other = "Disk Read/Write"
+
+[report.disk_device]
+other = "Disk Device"
+
+[report.label_network_in]
+other = "Receive Traffic(KB/S)"
+
+[report.label_network_out]
+other = "Send Traffic(KB/S)"
+
+[report.graph_network_in_out]
+other = "Network Traffic"
+
+# ==================== Report Memory Usage Fields ====================
+[report.memory_committed]
+other = "Committed"
+
+[report.memory_committed_percent]
+other = "Percentage of committed memory to total memory"
+
+[report.memory_dirty]
+other = "Dirty pages size that have been modified but not yet written to disk"
+
+[report.memory_real_usage]
+other = "Real Memory Usage"
+
+[report.memory_commit_limit]
+other = "Total memory usage that the system can guarantee"
+
+[report.memory_vmalloc_used]
+other = "Virtual Memory Used"
+
+# ==================== Report Process Fields ====================
+[report.process_user]
+other = "User"
+
+[report.process_cpu_usage]
+other = "CPU Usage"
+
+[report.process_memory_usage]
+other = "Memory Usage"
+
+[report.process_id]
+other = "Process ID"
+
+[report.process_command]
+other = "Command"
+
+[report.process_create_time]
+other = "Create Time"
+
+[report.process_status]
+other = "Status"
+
+# ==================== Report Child Items ====================
+[report.child_yasdb_ini]
+other = "Database Instance Configuration File: yasdb.ini"
+
+[report.child_yasdb_parameter]
+other = "Database Instance Parameter View: v$parameter"
+
+[report.child_history]
+other = "Historical Load"
+
+[report.child_current]
+other = "Current Load"
+
+# ==================== Memory Usage Table Headers ====================
+[report.memory_table_time]
+other = "Time"
+
+[report.memory_table_total]
+other = "Total Memory"
+
+[report.memory_table_free]
+other = "Free Memory"
+
+[report.memory_table_used_memory]
+other = "Used"
+
+[report.memory_table_usage_percent]
+other = "Usage Rate"
+
+[report.memory_table_buffers]
+other = "Buffers"
+
+[report.memory_table_cache]
+other = "Cache"
+
+[report.memory_table_available]
+other = "Available"
+
+[report.memory_table_commit]
+other = "Committed"
+
+[report.memory_table_commit_percent]
+other = "Percentage of committed memory to total memory"
+
+[report.memory_table_active]
+other = "Active Memory Size"
+
+[report.memory_table_inactive]
+other = "Inactive Memory Size"
+
+[report.memory_table_dirty]
+other = "Dirty Pages Size"
+
+[report.memory_table_real_usage]
+other = "Real Memory Usage"
+
+# ==================== Slow SQL ====================
+[report.slowsql_param_name]
+other = "Slow SQL Parameter Name"
+
+[report.slowsql_param_value]
+other = "Parameter Value"
+
+# ==================== Error Writer ====================
+[report.error_label]
+other = "Error"
+
+[report.description_label]
+other = "Description"
+
+# ==================== Extra File Collect ====================
+[report.extra_current_path]
+other = "Current Path"
+
+[report.extra_source_path]
+other = "Source File Path"
+
+# ==================== HTML UI ====================
+[report.toggle_toc_button]
+other = "Show/Hide TOC"
+
+# ==================== Parameter Tables ====================
+[report.param_name]
+other = "Parameter Name"
+
+[report.param_value]
+other = "Parameter Value"
+
+# ==================== Disk I/O Tables ====================
+[report.disk_time]
+other = "Time"
+
+[report.disk_iops]
+other = "IOPS"
+
+[report.disk_read_per_sec]
+other = "Read per Second"
+
+[report.disk_write_per_sec]
+other = "Write per Second"
+
+[report.disk_avg_req_size]
+other = "Average Request Size (sectors)"
+
+[report.disk_avg_queue_len]
+other = "Average Queue Length"
+
+[report.disk_avg_wait_time]
+other = "Average I/O Wait Time"
+
+[report.disk_avg_service_time]
+other = "Average I/O Service Time"
+
+[report.disk_utilization]
+other = "Device Utilization"
+
+[report.disk_read_count_per_sec]
+other = "Read Count per Second"
+
+[report.disk_write_count_per_sec]
+other = "Write Count per Second"
+
+[report.disk_label]
+other = "Device Label"
+
+# ==================== Database Status ====================
+[report.db_status]
+other = "Status"
+
+[report.db_open_mode]
+other = "Open Mode"
+
+[report.storage_path]
+other = "Storage Path"
+
+# ==================== Memory Usage Gopsutil Table ====================
+[report.memory_gopsutil_time]
+other = "Time"
+
+[report.memory_gopsutil_total]
+other = "Total Memory"
+
+[report.memory_gopsutil_free]
+other = "Free Memory"
+
+[report.memory_gopsutil_used]
+other = "Used"
+
+[report.memory_gopsutil_usage_percent]
+other = "Usage Rate"
+
+[report.memory_gopsutil_buffers]
+other = "Buffers"
+
+[report.memory_gopsutil_cache]
+other = "Cache"
+
+[report.memory_gopsutil_available]
+other = "Available"
+
+[report.memory_gopsutil_commit_limit]
+other = "Total Memory Usage Guaranteed by System"
+
+[report.memory_gopsutil_swap_total]
+other = "Total Swap Size"
+
+[report.memory_gopsutil_swap_used]
+other = "Swap Used"
+
+# ==================== Network I/O SAR Table ====================
+[report.network_sar_time]
+other = "Time"
+
+[report.network_sar_rx_packets]
+other = "Packets Received per Second"
+
+[report.network_sar_tx_packets]
+other = "Packets Sent per Second"
+
+[report.network_sar_rx_bytes]
+other = "Bytes Received per Second"
+
+[report.network_sar_tx_bytes]
+other = "Bytes Sent per Second"
+
+[report.network_sar_rx_compressed]
+other = "Compressed Packets Received per Second"
+
+[report.network_sar_tx_compressed]
+other = "Compressed Packets Sent per Second"
+
+[report.network_sar_rx_multicast]
+other = "Multicast Packets Received per Second"
+
+# ==================== Network I/O Gopsutil Table ====================
+[report.network_gopsutil_time]
+other = "Time"
+
+[report.network_gopsutil_rx_packets]
+other = "Packets Received per Second"
+
+[report.network_gopsutil_tx_packets]
+other = "Packets Sent per Second"
+
+[report.network_gopsutil_rx_bytes]
+other = "Bytes Received per Second"
+
+[report.network_gopsutil_tx_bytes]
+other = "Bytes Sent per Second"
+
+[report.network_gopsutil_rx_errors]
+other = "Receive Errors"
+
+[report.network_gopsutil_tx_errors]
+other = "Send Errors"
+
+[report.network_gopsutil_rx_dropped]
+other = "Incoming Packets Dropped"
+
+[report.network_gopsutil_tx_dropped]
+other = "Outgoing Packets Dropped"
+
+[report.network_gopsutil_rx_fifo]
+other = "Receive FIFO Buffer Errors"
+
+[report.network_gopsutil_tx_fifo]
+other = "Send FIFO Buffer Errors"
+
+# ==================== Network Configuration Table ====================
+[report.network_interface]
+other = "Network Interface"
+
+[report.network_ip_address]
+other = "IP Address"
+
+[report.network_mac_address]
+other = "MAC Address"
+
+# ==================== Collect Type Names ====================
+[collect.type_baseinfo]
+other = "Basic Information"
+
+[collect.type_diagnosis]
+other = "Diagnostic Information"
+
+[collect.type_performance]
+other = "Performance Tuning Information"
+
+[collect.type_extra]
+other = "Extra Collection Items"

@@ -8,10 +8,12 @@ import (
 	"time"
 
 	"ytc/defs/timedef"
+	"ytc/i18n"
 	"ytc/internal/modules/ytc/collect/baseinfo"
 	"ytc/internal/modules/ytc/collect/baseinfo/gopsutil"
 	"ytc/internal/modules/ytc/collect/baseinfo/sar"
 	"ytc/internal/modules/ytc/collect/commons/datadef"
+	"ytc/internal/modules/ytc/collect/commons/i18nnames"
 	"ytc/internal/modules/ytc/collect/data/reporter/commons"
 	"ytc/internal/modules/ytc/collect/resultgenner/reporter"
 	"ytc/internal/modules/ytc/collect/resultgenner/reporter/htmldef"
@@ -24,9 +26,6 @@ import (
 )
 
 const (
-	_graph_name_disk_iops       = "IOPS"
-	_graph_name_disk_read_write = "磁盘读写"
-
 	_graph_history_disk_iops = "history_disk_iops"
 	_graph_current_disk_iops = "current_disk_iops"
 
@@ -36,22 +35,15 @@ const (
 
 const (
 	// keys
+	_key_time_disk  = "time"
 	_key_disk_iops  = "disk_iops"
 	_key_disk_read  = "disk_read"
 	_key_disk_write = "disk_write"
-
-	// labels
-	_label_disk_iops  = "IPOS"
-	_label_disk_read  = "磁盘读取(KB/S)"
-	_label_disk_write = "磁盘写入(KB/S)"
 )
 
 var (
-	_yKeysDiskIOPS = []string{_key_disk_iops}
-	_yLabelsIOPS   = []string{_label_disk_iops}
-
+	_yKeysDiskIOPS      = []string{_key_disk_iops}
 	_yKeysDiskReadWrite = []string{_key_disk_read, _key_disk_write}
-	_yLabelsReadWrite   = []string{_label_disk_read, _label_disk_write}
 )
 
 // validate interface
@@ -75,7 +67,7 @@ func NewHostDiskIOReporter() HostDiskIOReporter {
 
 // [Interface Func]
 func (r HostDiskIOReporter) Report(item datadef.YTCItem, titlePrefix string) (content reporter.ReportContent, err error) {
-	title := fmt.Sprintf("%s %s", titlePrefix, baseinfo.BaseInfoChineseName[item.Name])
+	title := fmt.Sprintf("%s %s", titlePrefix, i18nnames.GetBaseInfoItemName(item.Name))
 	fontSize := reporter.FONT_SIZE_H2
 	txt := reporter.GenTxtTitle(title)
 	markdown := reporter.GenMarkdownTitle(title, fontSize)
@@ -178,15 +170,15 @@ func (r HostDiskIOReporter) genSarReportContent(sarData map[int64]map[string]sar
 
 	tw := commons.ReporterWriter.NewTableWriter()
 	tw.AppendHeader(table.Row{
-		"时间",
-		"IOPS",
-		"每秒钟读取",
-		"每秒钟写入",
-		"平均每个请求的扇区数",
-		"平均队列长度",
-		"平均 I/O 请求的等待时间",
-		"平均 I/O 请求的服务时间",
-		"设备的利用率",
+		i18n.T("report.disk_time"),
+		i18n.T("report.disk_iops"),
+		i18n.T("report.disk_read_per_sec"),
+		i18n.T("report.disk_write_per_sec"),
+		i18n.T("report.disk_avg_req_size"),
+		i18n.T("report.disk_avg_queue_len"),
+		i18n.T("report.disk_avg_wait_time"),
+		i18n.T("report.disk_avg_service_time"),
+		i18n.T("report.disk_utilization"),
 	})
 	for _, key := range keys {
 		var diskIOPSRows []map[string]interface{}
@@ -208,18 +200,18 @@ func (r HostDiskIOReporter) genSarReportContent(sarData map[int64]map[string]sar
 				fmt.Sprintf("%.2f", p.Util),
 			})
 			diskIOPSRow := make(map[string]interface{})
-			diskIOPSRow[_key_time] = time.Unix(p.timestamp, 0).Format(timedef.TIME_FORMAT)
+			diskIOPSRow[_key_time_disk] = time.Unix(p.timestamp, 0).Format(timedef.TIME_FORMAT)
 			diskIOPSRow[_key_disk_iops] = numutil.TruncateFloat64(p.Tps, 2)
 			diskIOPSRows = append(diskIOPSRows, diskIOPSRow)
 
 			diskReadWriteRow := make(map[string]interface{})
-			diskReadWriteRow[_key_time] = time.Unix(p.timestamp, 0).Format(timedef.TIME_FORMAT)
+			diskReadWriteRow[_key_time_disk] = time.Unix(p.timestamp, 0).Format(timedef.TIME_FORMAT)
 			diskReadWriteRow[_key_disk_read] = numutil.TruncateFloat64(p.RdSec, 2)
 			diskReadWriteRow[_key_disk_write] = numutil.TruncateFloat64(p.WrSec, 2)
 			diskReadWriteRows = append(diskReadWriteRows, diskReadWriteRow)
 		}
 
-		c := reporter.GenReportContentByWriterAndTitle(tw, fmt.Sprintf("磁盘设备：%s", key), reporter.FONT_SIZE_H4)
+		c := reporter.GenReportContentByWriterAndTitle(tw, fmt.Sprintf("%s: %s", i18n.T("report.disk_device"), key), reporter.FONT_SIZE_H4)
 		content.Txt += c.Txt + stringutil.STR_NEWLINE
 		content.Markdown += c.Markdown + stringutil.STR_NEWLINE
 		content.HTML += c.HTML + stringutil.STR_NEWLINE
@@ -228,15 +220,15 @@ func (r HostDiskIOReporter) genSarReportContent(sarData map[int64]map[string]sar
 		if isHistory {
 			graphName = _graph_history_disk_iops + key
 		}
-		content.HTML += reporter.GenHTMLTitle(_graph_name_disk_iops, reporter.FONT_SIZE_H4) + htmldef.GenGraphElement(graphName)
-		content.Graph += htmldef.GenGraphData(graphName, diskIOPSRows, _key_time, _yKeysDiskIOPS, _yLabelsIOPS)
+		content.HTML += reporter.GenHTMLTitle(i18n.T("report.graph_disk_iops"), reporter.FONT_SIZE_H4) + htmldef.GenGraphElement(graphName)
+		content.Graph += htmldef.GenGraphData(graphName, diskIOPSRows, _key_time_disk, _yKeysDiskIOPS, []string{i18n.T("report.label_disk_iops")})
 
 		graphName = _graph_current_disk_read_write + key
 		if isHistory {
 			graphName = _graph_history_disk_read_write + key
 		}
-		content.HTML += reporter.GenHTMLTitle(_graph_name_disk_read_write, reporter.FONT_SIZE_H4) + htmldef.GenGraphElement(graphName)
-		content.Graph += htmldef.GenGraphData(graphName, diskReadWriteRows, _key_time, _yKeysDiskReadWrite, _yLabelsReadWrite)
+		content.HTML += reporter.GenHTMLTitle(i18n.T("report.graph_disk_read_write"), reporter.FONT_SIZE_H4) + htmldef.GenGraphElement(graphName)
+		content.Graph += htmldef.GenGraphData(graphName, diskReadWriteRows, _key_time_disk, _yKeysDiskReadWrite, []string{i18n.T("report.label_disk_read"), i18n.T("report.label_disk_write")})
 
 		tw.ResetRows()
 	}
@@ -263,13 +255,13 @@ func (r HostDiskIOReporter) genGopsutilReportContent(gopsutilData map[int64]map[
 
 	tw := commons.ReporterWriter.NewTableWriter()
 	tw.AppendHeader(table.Row{
-		"时间",
-		"IOPS",
-		"每秒钟读取",
-		"每秒钟写入",
-		"每秒读次数",
-		"每秒写次数",
-		"设备标签",
+		i18n.T("report.disk_time"),
+		i18n.T("report.disk_iops"),
+		i18n.T("report.disk_read_per_sec"),
+		i18n.T("report.disk_write_per_sec"),
+		i18n.T("report.disk_read_count_per_sec"),
+		i18n.T("report.disk_write_count_per_sec"),
+		i18n.T("report.disk_label"),
 	})
 	for _, key := range keys {
 		var diskIOPSRows []map[string]interface{}
@@ -289,28 +281,28 @@ func (r HostDiskIOReporter) genGopsutilReportContent(gopsutilData map[int64]map[
 				p.Label,
 			})
 			diskIOPSRow := make(map[string]interface{})
-			diskIOPSRow[_key_time] = time.Unix(p.timestamp, 0).Format(timedef.TIME_FORMAT)
+			diskIOPSRow[_key_time_disk] = time.Unix(p.timestamp, 0).Format(timedef.TIME_FORMAT)
 			diskIOPSRow[_key_disk_iops] = numutil.TruncateFloat64(float64(p.Iops), 2)
 			diskIOPSRows = append(diskIOPSRows, diskIOPSRow)
 
 			diskReadWriteRow := make(map[string]interface{})
-			diskReadWriteRow[_key_time] = time.Unix(p.timestamp, 0).Format(timedef.TIME_FORMAT)
+			diskReadWriteRow[_key_time_disk] = time.Unix(p.timestamp, 0).Format(timedef.TIME_FORMAT)
 			diskReadWriteRow[_key_disk_read] = numutil.TruncateFloat64(p.KBReadSec, 2)
 			diskReadWriteRow[_key_disk_write] = numutil.TruncateFloat64(p.KBWriteSec, 2)
 			diskReadWriteRows = append(diskReadWriteRows, diskReadWriteRow)
 		}
-		c := reporter.GenReportContentByWriterAndTitle(tw, fmt.Sprintf("磁盘设备：%s", key), reporter.FONT_SIZE_H4)
+		c := reporter.GenReportContentByWriterAndTitle(tw, fmt.Sprintf("%s: %s", i18n.T("report.disk_device"), key), reporter.FONT_SIZE_H4)
 		content.Txt += c.Txt + stringutil.STR_NEWLINE
 		content.Markdown += c.Markdown + stringutil.STR_NEWLINE
 		content.HTML += c.HTML + stringutil.STR_NEWLINE
 
 		graphName := _graph_current_disk_iops + key
-		content.HTML += reporter.GenHTMLTitle(_graph_name_disk_iops, reporter.FONT_SIZE_H4) + htmldef.GenGraphElement(graphName)
-		content.Graph += htmldef.GenGraphData(graphName, diskIOPSRows, _key_time, _yKeysDiskIOPS, _yLabelsIOPS)
+		content.HTML += reporter.GenHTMLTitle(i18n.T("report.graph_disk_iops"), reporter.FONT_SIZE_H4) + htmldef.GenGraphElement(graphName)
+		content.Graph += htmldef.GenGraphData(graphName, diskIOPSRows, _key_time_disk, _yKeysDiskIOPS, []string{i18n.T("report.label_disk_iops")})
 
 		graphName = _graph_current_disk_read_write + key
-		content.HTML += reporter.GenHTMLTitle(_graph_name_disk_read_write, reporter.FONT_SIZE_H4) + htmldef.GenGraphElement(graphName)
-		content.Graph += htmldef.GenGraphData(graphName, diskReadWriteRows, _key_time, _yKeysDiskReadWrite, _yLabelsReadWrite)
+		content.HTML += reporter.GenHTMLTitle(i18n.T("report.graph_disk_read_write"), reporter.FONT_SIZE_H4) + htmldef.GenGraphElement(graphName)
+		content.Graph += htmldef.GenGraphData(graphName, diskReadWriteRows, _key_time_disk, _yKeysDiskReadWrite, []string{i18n.T("report.label_disk_read"), i18n.T("report.label_disk_write")})
 
 		tw.ResetRows()
 	}
@@ -318,7 +310,7 @@ func (r HostDiskIOReporter) genGopsutilReportContent(gopsutilData map[int64]map[
 }
 
 func (r HostDiskIOReporter) genHistoryContent(historyItem datadef.YTCItem, titlePrefix string) (historyItemContent reporter.ReportContent, err error) {
-	title := fmt.Sprintf("%s.1 %s", titlePrefix, baseinfo.BaseInfoChildChineseName[baseinfo.KEY_HISTORY])
+	title := fmt.Sprintf("%s.1 %s", titlePrefix, i18nnames.GetBaseInfoChildItemName(baseinfo.KEY_HISTORY))
 	fontSize := reporter.FONT_SIZE_H3
 	if len(historyItem.Error) != 0 {
 		ew := commons.ReporterWriter.NewErrorWriter(historyItem.Error, historyItem.Description)
@@ -340,7 +332,7 @@ func (r HostDiskIOReporter) genHistoryContent(historyItem datadef.YTCItem, title
 }
 
 func (r HostDiskIOReporter) genCurrentContent(currentItem datadef.YTCItem, titlePrefix string) (currentItemContent reporter.ReportContent, err error) {
-	title := fmt.Sprintf("%s.2 %s", titlePrefix, baseinfo.BaseInfoChildChineseName[baseinfo.KEY_CURRENT])
+	title := fmt.Sprintf("%s.2 %s", titlePrefix, i18nnames.GetBaseInfoChildItemName(baseinfo.KEY_CURRENT))
 	fontSize := reporter.FONT_SIZE_H3
 	if len(currentItem.Error) != 0 {
 		ew := commons.ReporterWriter.NewErrorWriter(currentItem.Error, currentItem.Description)

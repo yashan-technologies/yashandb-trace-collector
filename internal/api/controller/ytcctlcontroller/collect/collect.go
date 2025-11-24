@@ -10,6 +10,7 @@ import (
 	"ytc/defs/collecttypedef"
 	"ytc/defs/confdef"
 	"ytc/defs/errdef"
+	"ytc/i18n"
 	ytcctlhandler "ytc/internal/api/handler/ytcctlhandler/collect"
 	"ytc/internal/modules/ytc/collect/yasdb"
 	"ytc/log"
@@ -64,15 +65,15 @@ func (c *CollectCmd) Run() error {
 	if err := handler.Collect(YasdbValidate); err != nil {
 		log.Controller.Errorf(err.Error())
 		if err == errdef.ErrNoneCollectTtem {
-			fmt.Println(bashdef.WithBlue(err.Error()))
+			fmt.Println(bashdef.WithBlue(i18n.T("err.none_collect_item")))
 		}
-		fmt.Println("Stopping Collect...")
+		fmt.Println(i18n.T("collect.stopping"))
 	}
 	return nil
 }
 
 func (c *CollectCmd) Quit() {
-	fmt.Println("Quit Collect")
+	fmt.Println(i18n.T("collect.quitting"))
 }
 
 func (c *CollectCmd) genCollcterParam(env *yasdb.YasdbEnv) (*collecttypedef.CollectParam, error) {
@@ -97,6 +98,7 @@ func (c *CollectCmd) genCollcterParam(env *yasdb.YasdbEnv) (*collecttypedef.Coll
 		YasdbPassword:   env.YasdbPassword,
 		Include:         c.getExtraPath(c.Include),
 		Exclude:         c.getExtraPath(c.Exclude),
+		Lang:            i18n.GetCurrentLang(),
 		BeginTime:       time.Now(),
 		YasdbHomeOSUser: owner.Username,
 	}, nil

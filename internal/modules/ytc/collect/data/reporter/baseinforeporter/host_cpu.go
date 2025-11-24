@@ -4,8 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"ytc/internal/modules/ytc/collect/baseinfo"
+	"ytc/i18n"
 	"ytc/internal/modules/ytc/collect/commons/datadef"
+	"ytc/internal/modules/ytc/collect/commons/i18nnames"
 	"ytc/internal/modules/ytc/collect/data/reporter/commons"
 	"ytc/internal/modules/ytc/collect/resultgenner/reporter"
 
@@ -25,7 +26,7 @@ func NewHostCPUReporter() HostCPUReporter {
 
 // [Interface Func]
 func (r HostCPUReporter) Report(item datadef.YTCItem, titlePrefix string) (content reporter.ReportContent, err error) {
-	title := fmt.Sprintf("%s %s", titlePrefix, baseinfo.BaseInfoChineseName[item.Name])
+	title := fmt.Sprintf("%s %s", titlePrefix, i18nnames.GetBaseInfoItemName(item.Name))
 	fontSize := reporter.FONT_SIZE_H2
 
 	// report error
@@ -73,9 +74,9 @@ func (r HostCPUReporter) parseCPUInfos(cpuInfoItem datadef.YTCItem) (cpuInfos []
 
 func (r HostCPUReporter) genReportContentWriter(cpuInfos []cpu.InfoStat) reporter.Writer {
 	tw := commons.ReporterWriter.NewTableWriter()
-	tw.AppendHeader(table.Row{"检查项", "检查结果"})
+	tw.AppendHeader(table.Row{i18n.T("report.table_check_item"), i18n.T("report.table_check_result")})
 
-	tw.AppendRow(table.Row{"CPU型号", cpuInfos[0].ModelName})
+	tw.AppendRow(table.Row{i18n.T("report.field_cpu_model"), cpuInfos[0].ModelName})
 	tw.AppendSeparator()
 
 	var physicalCores, logicalCores int
@@ -85,13 +86,13 @@ func (r HostCPUReporter) genReportContentWriter(cpuInfos []cpu.InfoStat) reporte
 		logicalCores += int(c.Cores)
 	}
 	physicalCores = len(tmp)
-	tw.AppendRow(table.Row{"CPU核心数量", fmt.Sprintf("物理CPU核心：%d，逻辑CPU核心：%d", physicalCores, logicalCores)})
+	tw.AppendRow(table.Row{i18n.T("report.field_cpu_cores"), fmt.Sprintf("%s: %d, %s: %d", i18n.T("report.field_physical_cores"), physicalCores, i18n.T("report.field_logical_cores"), logicalCores)})
 	tw.AppendSeparator()
 
-	tw.AppendRow(table.Row{"CPU主频", fmt.Sprintf("@%.2fGHz", cpuInfos[0].Mhz/1000)})
+	tw.AppendRow(table.Row{i18n.T("report.field_cpu_frequency"), fmt.Sprintf("@%.2fGHz", cpuInfos[0].Mhz/1000)})
 	tw.AppendSeparator()
 
-	tw.AppendRow(table.Row{"厂商标识ID", cpuInfos[0].VendorID})
+	tw.AppendRow(table.Row{i18n.T("report.field_vendor_id"), cpuInfos[0].VendorID})
 
 	return tw
 }

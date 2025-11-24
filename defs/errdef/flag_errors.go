@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"ytc/i18n"
 	"ytc/utils/stringutil"
 )
 
@@ -29,9 +30,9 @@ func (e ErrYtcFlag) Error() string {
 		wrapExamples = append(wrapExamples, fmt.Sprintf("'%s'", e))
 	}
 	var message strings.Builder
-	message.WriteString(fmt.Sprintf("The value of %s: %s is invalid", e.Flag, e.Value))
+	message.WriteString(i18n.TWithData("err.flag_invalid", map[string]interface{}{"Flag": e.Flag, "Value": e.Value}))
 	if len(wrapExamples) != 0 {
-		message.WriteString(fmt.Sprintf(", the available input formats are as follows: [%s]", strings.Join(wrapExamples, stringutil.STR_COMMA)))
+		message.WriteString(i18n.TWithData("err.flag_available_formats", map[string]interface{}{"Examples": strings.Join(wrapExamples, stringutil.STR_COMMA)}))
 	}
 	if len(e.Help) != 0 {
 		message.WriteString(fmt.Sprintf(", %s", e.Help))

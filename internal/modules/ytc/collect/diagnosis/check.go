@@ -8,6 +8,7 @@ import (
 
 	"ytc/defs/collecttypedef"
 	"ytc/defs/runtimedef"
+	"ytc/i18n"
 	ytccollectcommons "ytc/internal/modules/ytc/collect/commons"
 	"ytc/internal/modules/ytc/collect/commons/datadef"
 	"ytc/internal/modules/ytc/collect/yasdb"
@@ -84,13 +85,13 @@ func (d *DiagCollecter) checkYasdbProcess() *ytccollectcommons.NoAccessRes {
 			force bool
 		)
 		if err != nil {
-			desc = fmt.Sprintf(ytccollectcommons.MATCH_PROCESS_ERR_DESC, d.YasdbData, err.Error())
-			tips = ytccollectcommons.MATCH_PROCESS_ERR_TIPS
+			desc = i18n.TWithData("diag.match_process_error_desc", map[string]interface{}{"Condition": d.YasdbData, "Error": err.Error()})
+			tips = i18n.T("diag.match_process_error_tips")
 			force = true
 		}
 		if len(proces) == 0 {
-			desc = fmt.Sprintf(ytccollectcommons.PROCESS_NO_FOUND_DESC, d.YasdbData)
-			tips = ytccollectcommons.PROCESS_NO_FUNND_TIPS
+			desc = i18n.TWithData("diag.process_not_found_desc", map[string]interface{}{"Condition": d.YasdbData})
+			tips = i18n.T("diag.process_not_found_tips")
 		}
 		return &ytccollectcommons.NoAccessRes{
 			ModuleItem:   datadef.DIAG_YASDB_PROCESS_STATUS,
@@ -114,7 +115,7 @@ func (d *DiagCollecter) checkYasdbInstanceStatus() *ytccollectcommons.NoAccessRe
 			ytccollectcommons.FillDescTips(noAccess, desc, tips)
 			return noAccess
 		}
-		tips = fmt.Sprintf(ytccollectcommons.YASDB_INSTANCE_STATUS_TIPS, d.YasdbData)
+		tips = i18n.TWithData("base.yasdb_instance_status_tips", map[string]interface{}{"Process": d.YasdbData})
 		ytccollectcommons.FillDescTips(noAccess, desc, tips)
 		return noAccess
 	}
@@ -156,7 +157,7 @@ func (d *DiagCollecter) checkYasdbAdr() *ytccollectcommons.NoAccessRes {
 			ytccollectcommons.FillDescTips(noAccess, desc, tips)
 			return noAccess
 		}
-		ytccollectcommons.FillDescTips(noAccess, desc, fmt.Sprintf(ytccollectcommons.DEFAULT_ADR_TIPS, diag))
+		ytccollectcommons.FillDescTips(noAccess, desc, i18n.TWithData("diag.default_adr_tips", map[string]interface{}{"Path": diag}))
 		noAccess.ForceCollect = true
 		return noAccess
 	}
@@ -168,7 +169,7 @@ func (d *DiagCollecter) checkYasdbAdr() *ytccollectcommons.NoAccessRes {
 			return noAccess
 		}
 		noAccess.ForceCollect = true
-		ytccollectcommons.FillDescTips(noAccess, desc, fmt.Sprintf(ytccollectcommons.DEFAULT_ADR_TIPS, diag))
+		ytccollectcommons.FillDescTips(noAccess, desc, i18n.TWithData("diag.default_adr_tips", map[string]interface{}{"Path": diag}))
 		return noAccess
 	}
 	adrPath, err := GetAdrPath(d.CollectParam)
@@ -205,7 +206,7 @@ func (d *DiagCollecter) checkYasdbRunLog() *ytccollectcommons.NoAccessRes {
 			ytccollectcommons.FillDescTips(noAccess, desc, tips)
 			return noAccess
 		}
-		ytccollectcommons.FillDescTips(noAccess, desc, fmt.Sprintf(ytccollectcommons.DEFAULT_RUNLOG_TIPS, defaultRunLog))
+		ytccollectcommons.FillDescTips(noAccess, desc, i18n.TWithData("diag.default_runlog_tips", map[string]interface{}{"Path": defaultRunLog}))
 		noAccess.ForceCollect = true
 		return noAccess
 	}
@@ -216,7 +217,7 @@ func (d *DiagCollecter) checkYasdbRunLog() *ytccollectcommons.NoAccessRes {
 			ytccollectcommons.FillDescTips(noAccess, desc, tips)
 			return noAccess
 		}
-		tips = fmt.Sprintf(ytccollectcommons.DEFAULT_RUNLOG_TIPS, defaultRunLog)
+		tips = i18n.TWithData("diag.default_runlog_tips", map[string]interface{}{"Path": defaultRunLog})
 		ytccollectcommons.FillDescTips(noAccess, desc, tips)
 		noAccess.ForceCollect = true
 		return noAccess
@@ -255,7 +256,7 @@ func (d *DiagCollecter) checkYasdbCoredump() *ytccollectcommons.NoAccessRes {
 	noAccess.ModuleItem = datadef.DIAG_YASDB_COREDUMP
 	originCoreDumpPath, coreDumpType, err := GetCoreDumpPath()
 	if err != nil {
-		noAccess.Description = fmt.Sprintf(ytccollectcommons.COREDUMP_ERR_DESC, err.Error())
+		noAccess.Description = i18n.TWithData("diag.coredump_error_desc", map[string]interface{}{"Error": err.Error()})
 		noAccess.Tips = " "
 		return noAccess
 	}
@@ -268,8 +269,8 @@ func (d *DiagCollecter) checkYasdbCoredump() *ytccollectcommons.NoAccessRes {
 	}
 	// gen relative path info
 	if !path.IsAbs(originCoreDumpPath) {
-		noAccess.Description = fmt.Sprintf(ytccollectcommons.COREDUMP_RELATIVE_DESC, originCoreDumpPath)
-		noAccess.Tips = fmt.Sprintf(ytccollectcommons.COREDUMP_RELATIVE_TIPS, coreDumpPath)
+		noAccess.Description = i18n.TWithData("diag.coredump_relative_desc", map[string]interface{}{"Pattern": originCoreDumpPath})
+		noAccess.Tips = i18n.TWithData("diag.coredump_relative_tips", map[string]interface{}{"Path": coreDumpPath})
 		noAccess.ForceCollect = true
 		return noAccess
 	}
@@ -299,8 +300,8 @@ func (d *DiagCollecter) checkSyslog() *ytccollectcommons.NoAccessRes {
 		noAccess.Tips = tips
 		return noAccess
 	}
-	noAccess.Description = fmt.Sprintf(ytccollectcommons.SYSLOG_UN_FOUND_DESC, SYSTEM_LOG_MESSAGES, SYSTEM_LOG_SYSLOG)
-	noAccess.Tips = ytccollectcommons.SYSLOG_UN_FOUND_TIPS
+	noAccess.Description = i18n.TWithData("diag.syslog_not_found_desc", map[string]interface{}{"Path1": SYSTEM_LOG_MESSAGES, "Path2": SYSTEM_LOG_SYSLOG})
+	noAccess.Tips = i18n.T("diag.syslog_not_found_tips")
 	return noAccess
 }
 
@@ -310,12 +311,12 @@ func (d *DiagCollecter) checkDmesg() *ytccollectcommons.NoAccessRes {
 	release := runtimedef.GetOSRelease()
 	if release.Id == osutil.KYLIN_ID {
 		if !userutil.IsCurrentUserRoot() {
-			noAccess.Description = ytccollectcommons.DMESG_NEED_ROOT_DESC
+			noAccess.Description = i18n.T("diag.dmesg_need_root_desc")
 			if sudoErr := userutil.CheckSudovn(log.Module); sudoErr != nil {
-				noAccess.Tips = ytccollectcommons.PLEASE_RUN_WITH_ROOT_TIPS
+				noAccess.Tips = i18n.T("common.run_with_root_tips")
 				return noAccess
 			}
-			noAccess.Tips = ytccollectcommons.PLEASE_RUN_WITH_SUDO_TIPS
+			noAccess.Tips = i18n.T("common.run_with_sudo_tips")
 			return noAccess
 		}
 	}
@@ -323,13 +324,11 @@ func (d *DiagCollecter) checkDmesg() *ytccollectcommons.NoAccessRes {
 }
 
 func (d *DiagCollecter) checkBashHistory() *ytccollectcommons.NoAccessRes {
-	const default_description = "The data source of bash history is the $HISTFILE file."
-	const default_tips = "if you need to keep the history of the current terminal, please execute 'history -a' first."
 	logger := log.Module.M(datadef.DIAG_HOST_BASH_HISTORY)
 	resp := &ytccollectcommons.NoAccessRes{
 		ModuleItem:   datadef.DIAG_HOST_BASH_HISTORY,
-		Description:  default_description,
-		Tips:         default_tips,
+		Description:  i18n.T("diag.bash_history_desc"),
+		Tips:         i18n.T("diag.bash_history_tips"),
 		ForceCollect: true,
 	}
 
@@ -344,19 +343,19 @@ func (d *DiagCollecter) checkBashHistory() *ytccollectcommons.NoAccessRes {
 		return resp
 	case userutil.ErrSudoNeedPwd:
 		resp.Description = err.Error()
-		resp.Tips = ytccollectcommons.PLEASE_RUN_WITH_SUDO_TIPS
+		resp.Tips = i18n.T("common.run_with_sudo_tips")
 	default:
 		resp.Description = err.Error()
-		resp.Tips = ytccollectcommons.PLEASE_RUN_WITH_ROOT_TIPS
+		resp.Tips = i18n.T("common.run_with_root_tips")
 	}
 
 	if userutil.CanSuToTargetUserWithoutPassword(runtimedef.GetRootUsername(), logger) {
 		_currentBashHistoryPermission = bhp_can_su_to_root_without_password_permission
-		resp.Description = default_description
-		resp.Tips = default_tips
+		resp.Description = i18n.T("diag.bash_history_desc")
+		resp.Tips = i18n.T("diag.bash_history_tips")
 		return resp
 	}
-	resp.Description = "has no permission to collect bash history of root"
+	resp.Description = i18n.T("diag.bash_history_no_permission")
 
 	canSuToYasdbUserWithoutPassword := false
 	if d.CollectParam.YasdbHomeOSUser == userutil.CurrentUser {

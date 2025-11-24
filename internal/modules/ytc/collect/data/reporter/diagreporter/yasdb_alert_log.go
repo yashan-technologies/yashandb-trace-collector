@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	"ytc/internal/modules/ytc/collect/commons/datadef"
+	"ytc/internal/modules/ytc/collect/commons/i18nnames"
 	"ytc/internal/modules/ytc/collect/data/reporter/commons"
-	"ytc/internal/modules/ytc/collect/diagnosis"
 	"ytc/internal/modules/ytc/collect/resultgenner/reporter"
 )
 
@@ -20,7 +20,7 @@ func NewYashanDBAlertLogReporter() YashanDBAlertLogReporter {
 
 // [Interface Func]
 func (r YashanDBAlertLogReporter) Report(item datadef.YTCItem, titlePrefix string) (content reporter.ReportContent, err error) {
-	title := fmt.Sprintf("%s %s", titlePrefix, diagnosis.DiagChineseName[item.Name])
+	title := fmt.Sprintf("%s %s", titlePrefix, i18nnames.GetDiagItemName(item.Name))
 	fontSize := reporter.FONT_SIZE_H2
 
 	// report error

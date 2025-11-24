@@ -7,7 +7,8 @@ import (
 	"ytc/defs/bashdef"
 	"ytc/defs/errdef"
 	"ytc/defs/runtimedef"
-	ytccollectcommons "ytc/internal/modules/ytc/collect/commons"
+	"ytc/i18n"
+	commons "ytc/internal/modules/ytc/collect/commons"
 	"ytc/internal/modules/ytc/collect/commons/datadef"
 	"ytc/log"
 	"ytc/utils/execerutil"
@@ -49,92 +50,92 @@ func (b *BaseCollecter) CheckFireWallAccess() error {
 	return nil
 }
 
-func (b *BaseCollecter) checkYasdbVersion() *ytccollectcommons.NoAccessRes {
-	yasdb := path.Join(b.YasdbHome, ytccollectcommons.BIN, ytccollectcommons.YASDB)
+func (b *BaseCollecter) checkYasdbVersion() *commons.NoAccessRes {
+	yasdb := path.Join(b.YasdbHome, commons.BIN, commons.YASDB)
 	err := fileutil.CheckAccess(yasdb)
 	if err == nil {
 		return nil
 	}
-	desc, tips := ytccollectcommons.PathErrDescAndTips(yasdb, err)
-	return &ytccollectcommons.NoAccessRes{
+	desc, tips := commons.PathErrDescAndTips(yasdb, err)
+	return &commons.NoAccessRes{
 		ModuleItem:  datadef.BASE_YASDB_VERION,
 		Description: desc,
 		Tips:        tips,
 	}
 }
 
-func (b *BaseCollecter) checkYasdbParameter() (noAccess *ytccollectcommons.NoAccessRes) {
-	noAccess = new(ytccollectcommons.NoAccessRes)
+func (b *BaseCollecter) checkYasdbParameter() (noAccess *commons.NoAccessRes) {
+	noAccess = new(commons.NoAccessRes)
 	noAccess.ModuleItem = datadef.BASE_YASDB_PARAMETER
-	yasql := path.Join(b.YasdbHome, ytccollectcommons.BIN, ytccollectcommons.YASQL)
-	ini := path.Join(b.YasdbData, ytccollectcommons.CONFIG, ytccollectcommons.YASDB_INI)
+	yasql := path.Join(b.YasdbHome, commons.BIN, commons.YASQL)
+	ini := path.Join(b.YasdbData, commons.CONFIG, commons.YASDB_INI)
 	iniErr := fileutil.CheckAccess(ini)
 	yasqlErr := fileutil.CheckAccess(yasql)
 	if yasqlErr != nil {
-		desc, tips := ytccollectcommons.PathErrDescAndTips(yasql, yasqlErr)
+		desc, tips := commons.PathErrDescAndTips(yasql, yasqlErr)
 		if iniErr == nil {
 			noAccess.ForceCollect = true
-			ytccollectcommons.FillDescTips(noAccess, desc, fmt.Sprintf(ytccollectcommons.DEFAULT_PARAMETER_TIPS, ini))
+			commons.FillDescTips(noAccess, desc, i18n.TWithData("base.default_parameter_tips", map[string]interface{}{"Path": ini}))
 			return
 		}
-		ytccollectcommons.FillDescTips(noAccess, desc, tips)
+		commons.FillDescTips(noAccess, desc, tips)
 		return
 	}
 	if b.yasdbValidateErr != nil {
 		b.notConnectDB = true
-		desc, tips := ytccollectcommons.YasErrDescAndTips(b.yasdbValidateErr)
+		desc, tips := commons.YasErrDescAndTips(b.yasdbValidateErr)
 		if iniErr == nil {
 			noAccess.ForceCollect = true
-			ytccollectcommons.FillDescTips(noAccess, desc, fmt.Sprintf(ytccollectcommons.DEFAULT_PARAMETER_TIPS, ini))
+			commons.FillDescTips(noAccess, desc, i18n.TWithData("base.default_parameter_tips", map[string]interface{}{"Path": ini}))
 			return
 		}
-		ytccollectcommons.FillDescTips(noAccess, desc, tips)
+		commons.FillDescTips(noAccess, desc, tips)
 		return
 	}
 	return nil
 }
 
-func (b *BaseCollecter) checkFireWall() *ytccollectcommons.NoAccessRes {
+func (b *BaseCollecter) checkFireWall() *commons.NoAccessRes {
 	if err := b.CheckFireWallAccess(); err != nil {
-		tips := err.Error()
+		tips := i18n.T(err.Error())
 		if err := userutil.CheckSudovn(log.Module); err != nil {
-			tips = ytccollectcommons.CheckSudoTips(err)
+			tips = commons.CheckSudoTips(err)
 		}
-		return &ytccollectcommons.NoAccessRes{
+		return &commons.NoAccessRes{
 			ModuleItem:  datadef.BASE_HOST_FIREWALLD,
-			Description: err.Error(),
+			Description: i18n.T(err.Error()),
 			Tips:        tips,
 		}
 	}
 	return nil
 }
 
-func (b *BaseCollecter) checkNetworkIo() *ytccollectcommons.NoAccessRes {
+func (b *BaseCollecter) checkNetworkIo() *commons.NoAccessRes {
 	return b.checkSarWithItem(datadef.BASE_HOST_NETWORK_IO)
 }
 
-func (b *BaseCollecter) checkDiskIo() *ytccollectcommons.NoAccessRes {
+func (b *BaseCollecter) checkDiskIo() *commons.NoAccessRes {
 	return b.checkSarWithItem(datadef.BASE_HOST_DISK_IO)
 
 }
 
-func (b *BaseCollecter) checkMemoryUsage() *ytccollectcommons.NoAccessRes {
+func (b *BaseCollecter) checkMemoryUsage() *commons.NoAccessRes {
 	return b.checkSarWithItem(datadef.BASE_HOST_MEMORY_USAGE)
 
 }
 
-func (b *BaseCollecter) checkCpuUsage() *ytccollectcommons.NoAccessRes {
+func (b *BaseCollecter) checkCpuUsage() *commons.NoAccessRes {
 	return b.checkSarWithItem(datadef.BASE_HOST_CPU_USAGE)
 
 }
 
-func (b *BaseCollecter) checkSarWithItem(item string) *ytccollectcommons.NoAccessRes {
+func (b *BaseCollecter) checkSarWithItem(item string) *commons.NoAccessRes {
 	if err := b.CheckSarAccess(); err != nil {
 		os := runtimedef.GetOSRelease()
-		noAccess := &ytccollectcommons.NoAccessRes{
+		noAccess := &commons.NoAccessRes{
 			ModuleItem:   item,
 			Description:  err.Error(),
-			Tips:         fmt.Sprintf(_tips_sar_not_exist, _os_sar_install_tips[os.Id]),
+			Tips:         i18n.TWithData("base.sar_not_exist_tips", map[string]interface{}{"InstallCmd": _os_sar_install_tips[os.Id]}),
 			ForceCollect: true,
 		}
 		return noAccess

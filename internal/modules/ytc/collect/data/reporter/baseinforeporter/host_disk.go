@@ -4,8 +4,10 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"ytc/i18n"
 	"ytc/internal/modules/ytc/collect/baseinfo"
 	"ytc/internal/modules/ytc/collect/commons/datadef"
+	"ytc/internal/modules/ytc/collect/commons/i18nnames"
 	"ytc/internal/modules/ytc/collect/data/reporter/commons"
 	"ytc/internal/modules/ytc/collect/resultgenner/reporter"
 
@@ -26,7 +28,7 @@ func NewHostDiskReporter() HostDiskReporter {
 
 // [Interface Func]
 func (r HostDiskReporter) Report(item datadef.YTCItem, titlePrefix string) (content reporter.ReportContent, err error) {
-	title := fmt.Sprintf("%s %s", titlePrefix, baseinfo.BaseInfoChineseName[item.Name])
+	title := fmt.Sprintf("%s %s", titlePrefix, i18nnames.GetBaseInfoItemName(item.Name))
 	fontSize := reporter.FONT_SIZE_H2
 
 	// report error
@@ -75,14 +77,14 @@ func (r HostDiskReporter) parseDiskUsage(item datadef.YTCItem) (usages []baseinf
 func (r HostDiskReporter) genReportContentWriter(usages []baseinfo.DiskUsage) reporter.Writer {
 	tw := commons.ReporterWriter.NewTableWriter()
 	tw.AppendHeader(table.Row{
-		"磁盘设备",
-		"文件系统类型",
-		"磁盘大小",
-		"已使用",
-		"可用",
-		"使用率",
-		"挂载路径",
-		"挂载选项",
+		i18n.T("report.field_disk_device"),
+		i18n.T("report.field_filesystem_type"),
+		i18n.T("report.field_disk_size"),
+		i18n.T("report.field_used"),
+		i18n.T("report.field_available"),
+		i18n.T("report.field_usage_rate"),
+		i18n.T("report.field_mount_path"),
+		i18n.T("report.field_mount_options"),
 	})
 	for _, u := range usages {
 		tw.AppendRow(table.Row{

@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"ytc/defs/timedef"
+	"ytc/i18n"
 )
 
 const (
@@ -56,6 +57,7 @@ type CollectParam struct {
 	YasdbPassword   string    `json:"yasdbPassword"`
 	Include         []string  `json:"include"`
 	Exclude         []string  `json:"exclude"`
+	Lang            string    `json:"lang"`
 	BeginTime       time.Time `json:"-"`
 	YasdbHomeOSUser string    `json:"-"`
 }
@@ -67,6 +69,17 @@ type WorkloadOutput map[int64]WorkloadItem
 type WorkloadType string
 
 func GetTypeFullName(s string) string {
+	// Use i18n for type names
+	keyMap := map[string]string{
+		TYPE_BASE:  "collect.type_baseinfo",
+		TYPE_DIAG:  "collect.type_diagnosis",
+		TYPE_PERF:  "collect.type_performance",
+		TYPE_EXTRA: "collect.type_extra",
+	}
+	if key, ok := keyMap[s]; ok {
+		return i18n.T(key)
+	}
+	// Fallback to old behavior
 	full, ok := typeFullName[s]
 	if !ok {
 		full = s
@@ -85,4 +98,18 @@ func (c *CollectParam) GetPackageName() string {
 
 func (c *CollectParam) GenPackageRelativePath(p string) string {
 	return path.Join(c.GetPackageName(), p)
+}
+
+// GetModuleName returns the localized module name
+func GetModuleName(moduleType string) string {
+	keyMap := map[string]string{
+		TYPE_BASE:  "report.module_baseinfo",
+		TYPE_DIAG:  "report.module_diagnosis",
+		TYPE_PERF:  "report.module_performance",
+		TYPE_EXTRA: "report.module_extra",
+	}
+	if key, ok := keyMap[moduleType]; ok {
+		return i18n.T(key)
+	}
+	return moduleType
 }

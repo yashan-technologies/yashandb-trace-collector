@@ -5,7 +5,9 @@ import (
 	"fmt"
 	"sort"
 
+	"ytc/i18n"
 	"ytc/internal/modules/ytc/collect/commons/datadef"
+	"ytc/internal/modules/ytc/collect/commons/i18nnames"
 	"ytc/internal/modules/ytc/collect/data/reporter/commons"
 	"ytc/internal/modules/ytc/collect/performance"
 	"ytc/internal/modules/ytc/collect/resultgenner/reporter"
@@ -29,7 +31,7 @@ func NewSlowSqlReporter() SlowSqlReporter {
 
 // [Interface Func]
 func (r SlowSqlReporter) Report(item datadef.YTCItem, titlePrefix string) (content reporter.ReportContent, err error) {
-	title := fmt.Sprintf("%s %s", titlePrefix, performance.PerformanceChineseName[item.Name])
+	title := fmt.Sprintf("%s %s", titlePrefix, i18nnames.GetPerfItemName(item.Name))
 	fontSize := reporter.FONT_SIZE_H2
 
 	// report error
@@ -97,7 +99,7 @@ func (r SlowSqlReporter) allChildrenReportFunc() (funMap map[string]genReportFun
 }
 
 func (r SlowSqlReporter) genSlowParamContent(titlePrefix string, index int, slowSQL datadef.YTCItem) (content reporter.ReportContent, err error) {
-	title := fmt.Sprintf("%s.%d %s", titlePrefix, index, performance.PerformanceChildChineseName[performance.KEY_SLOW_SQL_PARAMETER])
+	title := fmt.Sprintf("%s.%d %s", titlePrefix, index, i18nnames.GetPerfChildItemName(performance.KEY_SLOW_SQL_PARAMETER))
 	fontSize := reporter.FONT_SIZE_H3
 	slowParameter, ok := slowSQL.Children[performance.KEY_SLOW_SQL_PARAMETER]
 	if !ok {
@@ -119,7 +121,7 @@ func (r SlowSqlReporter) genSlowParamContent(titlePrefix string, index int, slow
 
 func (r SlowSqlReporter) genSlowSQLParameterContentWriter(parameters []*yasdb.VParameter) reporter.Writer {
 	tw := commons.ReporterWriter.NewTableWriter()
-	tw.AppendHeader(table.Row{"慢SQL参数名称", "参数值"})
+	tw.AppendHeader(table.Row{i18n.T("report.slowsql_param_name"), i18n.T("report.slowsql_param_value")})
 	for _, p := range parameters {
 		tw.AppendRow(table.Row{p.Name, p.Value})
 	}
@@ -127,7 +129,7 @@ func (r SlowSqlReporter) genSlowSQLParameterContentWriter(parameters []*yasdb.VP
 }
 
 func (r SlowSqlReporter) genSlowLogsInFileContent(titlePrefix string, index int, slowSQL datadef.YTCItem) (content reporter.ReportContent, err error) {
-	title := fmt.Sprintf("%s.%d %s", titlePrefix, index, performance.PerformanceChildChineseName[performance.KEY_SLOW_SQL_LOGS_IN_FILE])
+	title := fmt.Sprintf("%s.%d %s", titlePrefix, index, i18nnames.GetPerfChildItemName(performance.KEY_SLOW_SQL_LOGS_IN_FILE))
 	fontSize := reporter.FONT_SIZE_H3
 	curFileItem, ok := slowSQL.Children[performance.KEY_SLOW_SQL_LOGS_IN_FILE]
 	if !ok {
@@ -148,7 +150,7 @@ func (r SlowSqlReporter) genSlowLogsInFileContent(titlePrefix string, index int,
 }
 
 func (r SlowSqlReporter) genSlowLogsInTableContent(titlePrefix string, index int, slowSQL datadef.YTCItem) (content reporter.ReportContent, err error) {
-	title := fmt.Sprintf("%s.%d %s", titlePrefix, index, performance.PerformanceChildChineseName[performance.KEY_SLOW_SQL_LOGS_IN_TABLE])
+	title := fmt.Sprintf("%s.%d %s", titlePrefix, index, i18nnames.GetPerfChildItemName(performance.KEY_SLOW_SQL_LOGS_IN_TABLE))
 	fontSize := reporter.FONT_SIZE_H3
 	slowLogItem, ok := slowSQL.Children[performance.KEY_SLOW_SQL_LOGS_IN_TABLE]
 	if !ok {

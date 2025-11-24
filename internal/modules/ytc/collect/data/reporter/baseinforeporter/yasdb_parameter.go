@@ -6,8 +6,10 @@ import (
 	"sort"
 	"strings"
 
+	"ytc/i18n"
 	"ytc/internal/modules/ytc/collect/baseinfo"
 	"ytc/internal/modules/ytc/collect/commons/datadef"
+	"ytc/internal/modules/ytc/collect/commons/i18nnames"
 	"ytc/internal/modules/ytc/collect/data/reporter/commons"
 	"ytc/internal/modules/ytc/collect/resultgenner/reporter"
 	"ytc/internal/modules/ytc/collect/yasdb"
@@ -28,7 +30,7 @@ func NewYashanDBParameterReporter() YashanDBParameterReporter {
 
 // [Interface Func]
 func (r YashanDBParameterReporter) Report(item datadef.YTCItem, titlePrefix string) (content reporter.ReportContent, err error) {
-	title := fmt.Sprintf("%s %s", titlePrefix, baseinfo.BaseInfoChineseName[item.Name])
+	title := fmt.Sprintf("%s %s", titlePrefix, i18nnames.GetBaseInfoItemName(item.Name))
 	fontSize := reporter.FONT_SIZE_H2
 	txt := reporter.GenTxtTitle(title)
 	markdown := reporter.GenMarkdownTitle(title, fontSize)
@@ -127,7 +129,7 @@ func (r YashanDBParameterReporter) parseParameter(parameter datadef.YTCItem) (pa
 }
 
 func (r YashanDBParameterReporter) genYasdbIniContent(yasdbIni datadef.YTCItem, titlePrefix string) (yasdbIniContent reporter.ReportContent, err error) {
-	title := fmt.Sprintf("%s.1 %s", titlePrefix, baseinfo.BaseInfoChildChineseName[baseinfo.KEY_YASDB_INI])
+	title := fmt.Sprintf("%s.1 %s", titlePrefix, i18nnames.GetBaseInfoChildItemName(baseinfo.KEY_YASDB_INI))
 	fontSize := reporter.FONT_SIZE_H3
 	if len(yasdbIni.Error) != 0 {
 		ew := commons.ReporterWriter.NewErrorWriter(yasdbIni.Error, yasdbIni.Description)
@@ -139,7 +141,7 @@ func (r YashanDBParameterReporter) genYasdbIniContent(yasdbIni datadef.YTCItem, 
 			return
 		}
 		tw := commons.ReporterWriter.NewTableWriter()
-		tw.AppendHeader(table.Row{"参数名称", "参数值"})
+		tw.AppendHeader(table.Row{i18n.T("report.param_name"), i18n.T("report.param_value")})
 
 		var keys []string
 		for key := range ymap {
@@ -156,7 +158,7 @@ func (r YashanDBParameterReporter) genYasdbIniContent(yasdbIni datadef.YTCItem, 
 }
 
 func (r YashanDBParameterReporter) genVParameterContent(parameter datadef.YTCItem, titlePrefix string) (parameterContent reporter.ReportContent, err error) {
-	title := fmt.Sprintf("%s.2 %s", titlePrefix, baseinfo.BaseInfoChildChineseName[baseinfo.KEY_YASDB_PARAMETER])
+	title := fmt.Sprintf("%s.2 %s", titlePrefix, i18nnames.GetBaseInfoChildItemName(baseinfo.KEY_YASDB_PARAMETER))
 	fontSize := reporter.FONT_SIZE_H3
 	if len(parameter.Error) != 0 {
 		ew := commons.ReporterWriter.NewErrorWriter(parameter.Error, parameter.Description)
@@ -171,7 +173,7 @@ func (r YashanDBParameterReporter) genVParameterContent(parameter datadef.YTCIte
 			return parameters[i].Name < parameters[j].Name
 		})
 		tw := commons.ReporterWriter.NewTableWriter()
-		tw.AppendHeader(table.Row{"参数名称", "参数值"})
+		tw.AppendHeader(table.Row{i18n.T("report.param_name"), i18n.T("report.param_value")})
 		for _, p := range parameters {
 			tw.AppendRow(table.Row{p.Name, p.Value})
 			tw.AppendSeparator()

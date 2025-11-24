@@ -13,6 +13,7 @@ type Globals struct {
 	// normal flags
 	Version kong.VersionFlag `short:"v" help:"Show version."`
 	Config  string           `name:"config" short:"c" default:"./config/ytc.toml" help:"Configuration file."`
+	Lang    string           `name:"lang" short:"l" default:"zh" help:"Language (en, zh)."`
 	// hidden flags
 	Show showFlag `name:"show" hidden:"true" help:"[Hidden] Show software compilation information."`
 }

@@ -5,8 +5,9 @@ import (
 	"fmt"
 	"strings"
 
-	"ytc/internal/modules/ytc/collect/baseinfo"
+	"ytc/i18n"
 	"ytc/internal/modules/ytc/collect/commons/datadef"
+	"ytc/internal/modules/ytc/collect/commons/i18nnames"
 	"ytc/internal/modules/ytc/collect/data/reporter/commons"
 	"ytc/internal/modules/ytc/collect/resultgenner/reporter"
 	"ytc/utils/stringutil"
@@ -28,7 +29,7 @@ func NewHostNetworkReporter() HostNetworkReporter {
 
 // [Interface Func]
 func (r HostNetworkReporter) Report(item datadef.YTCItem, titlePrefix string) (content reporter.ReportContent, err error) {
-	title := fmt.Sprintf("%s %s", titlePrefix, baseinfo.BaseInfoChineseName[item.Name])
+	title := fmt.Sprintf("%s %s", titlePrefix, i18nnames.GetBaseInfoItemName(item.Name))
 	fontSize := reporter.FONT_SIZE_H2
 
 	// report error
@@ -76,7 +77,7 @@ func (r HostNetworkReporter) parseNetworkInfo(item datadef.YTCItem) (networks []
 func (r HostNetworkReporter) genReportContentWriter(networks []net.InterfaceStat, title string, fontSize reporter.FontSize) (content reporter.ReportContent) {
 	titleContent := reporter.GenReportContentByTitle(title, fontSize)
 	tw := commons.ReporterWriter.NewTableWriter()
-	tw.AppendHeader(table.Row{"网络接口", "IP地址", "MAC地址"})
+	tw.AppendHeader(table.Row{i18n.T("report.network_interface"), i18n.T("report.network_ip_address"), i18n.T("report.network_mac_address")})
 	genTableRows := func(sep string) (rows []table.Row) {
 		for _, n := range networks {
 			var ipv4, ipv6 []string

@@ -1,11 +1,11 @@
 package performance
 
 import (
-	"fmt"
 	"path"
 	"strings"
 
 	"ytc/defs/confdef"
+	"ytc/i18n"
 	ytccollectcommons "ytc/internal/modules/ytc/collect/commons"
 	"ytc/internal/modules/ytc/collect/commons/datadef"
 	"ytc/internal/modules/ytc/collect/yasdb"
@@ -33,7 +33,7 @@ func (p *PerfCollecter) checkDatabaseOpenMode(logger yaslog.YasLog) (bool, error
 func (p *PerfCollecter) checkAWR() *ytccollectcommons.NoAccessRes {
 	noAccess := &ytccollectcommons.NoAccessRes{ModuleItem: datadef.PERF_YASDB_AWR}
 	if strings.ToUpper(p.YasdbUser) != USER_SYS {
-		ytccollectcommons.FillDescTips(noAccess, fmt.Sprintf(ytccollectcommons.USER_NOT_SYS_DESC, p.YasdbUser), ytccollectcommons.USER_NOT_SYS_TIPS)
+		ytccollectcommons.FillDescTips(noAccess, i18n.TWithData("perf.user_not_sys_desc", map[string]interface{}{"User": p.YasdbUser}), i18n.T("perf.user_not_sys_tips"))
 		return noAccess
 	}
 	if p.yasdbValidateErr != nil {
@@ -50,15 +50,15 @@ func (p *PerfCollecter) checkAWR() *ytccollectcommons.NoAccessRes {
 		return noAccess
 	}
 	if !inReadWriteMode {
-		desc, tips := ytccollectcommons.AWR_SKIP_TIPS, ytccollectcommons.AWR_SKIP_TIPS
+		desc, tips := i18n.T("perf.awr_skip_tips"), i18n.T("perf.awr_skip_tips")
 		ytccollectcommons.FillDescTips(noAccess, desc, tips)
 		return noAccess
 	}
 	// TODO: check v$instance boot time
 	if _, _, err := p.genStartEndSnapId(logger); err != nil {
 		if err == yasdb.ErrNoSatisfiedSnapshot {
-			desc := ytccollectcommons.NO_SATISFIED_SNAP_DESC
-			tips := ytccollectcommons.NO_SATISFIED_TIPS
+			desc := i18n.T("perf.no_satisfied_snap_desc")
+			tips := i18n.T("perf.no_satisfied_tips")
 			ytccollectcommons.FillDescTips(noAccess, desc, tips)
 			return noAccess
 		}
@@ -68,8 +68,8 @@ func (p *PerfCollecter) checkAWR() *ytccollectcommons.NoAccessRes {
 	}
 	collectConfig := confdef.GetStrategyConf().Collect
 	timeout := collectConfig.GetAWRTimeout()
-	desc := ytccollectcommons.AWR_TIMEOUT_DESC
-	tips := fmt.Sprintf(ytccollectcommons.AWR_TIMEOUT_TIPS, timeout.String())
+	desc := i18n.T("perf.awr_timeout_desc")
+	tips := i18n.TWithData("perf.awr_timeout_tips", map[string]interface{}{"Timeout": timeout.String()})
 	ytccollectcommons.FillDescTips(noAccess, desc, tips)
 	noAccess.ForceCollect = true
 	return noAccess
@@ -78,7 +78,7 @@ func (p *PerfCollecter) checkAWR() *ytccollectcommons.NoAccessRes {
 func (p *PerfCollecter) checkSlowSql() *ytccollectcommons.NoAccessRes {
 	noAccess := &ytccollectcommons.NoAccessRes{ModuleItem: datadef.PERF_YASDB_SLOW_SQL}
 	defaultSlowLog := path.Join(p.YasdbData, ytccollectcommons.LOG, ytccollectcommons.SLOW, ytccollectcommons.SLOW_LOG)
-	defaultSlowLogTips := fmt.Sprintf(ytccollectcommons.DEFAULT_SLOWSQL_TIPS, defaultSlowLog)
+	defaultSlowLogTips := i18n.TWithData("perf.default_slowsql_tips", map[string]interface{}{"Path": defaultSlowLog})
 	if p.yasdbValidateErr != nil {
 		desc, tips := ytccollectcommons.YasErrDescAndTips(p.yasdbValidateErr)
 		if err := fileutil.CheckAccess(defaultSlowLog); err != nil {

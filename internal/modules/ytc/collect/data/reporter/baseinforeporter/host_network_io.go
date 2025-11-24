@@ -9,10 +9,12 @@ import (
 
 	"ytc/defs/confdef"
 	"ytc/defs/timedef"
+	"ytc/i18n"
 	"ytc/internal/modules/ytc/collect/baseinfo"
 	"ytc/internal/modules/ytc/collect/baseinfo/gopsutil"
 	"ytc/internal/modules/ytc/collect/baseinfo/sar"
 	"ytc/internal/modules/ytc/collect/commons/datadef"
+	"ytc/internal/modules/ytc/collect/commons/i18nnames"
 	"ytc/internal/modules/ytc/collect/data/reporter/commons"
 	"ytc/internal/modules/ytc/collect/resultgenner/reporter"
 	"ytc/internal/modules/ytc/collect/resultgenner/reporter/htmldef"
@@ -25,25 +27,19 @@ import (
 )
 
 const (
-	_graph_name_network_in_out = "网络流量"
-
 	_graph_history_network_in_out = "history_network_in_out"
 	_graph_current_network_in_out = "current_network_in_out"
 )
 
 const (
 	// keys
-	_key_network_in  = "network_in"
-	_key_network_out = "network_out"
-
-	// labels
-	_label_network_in  = "接收流量(KB/S)"
-	_label_network_out = "发送流量(KB/S)"
+	_key_time_network = "time"
+	_key_network_in   = "network_in"
+	_key_network_out  = "network_out"
 )
 
 var (
-	_yKeysNetworkInOut   = []string{_key_network_in, _key_network_out}
-	_yLabelsNetworkInOut = []string{_label_network_in, _label_network_out}
+	_yKeysNetworkInOut = []string{_key_network_in, _key_network_out}
 )
 
 // validate interface
@@ -67,7 +63,7 @@ func NewHostNetworkIOReporter() HostNetworkIOReporter {
 
 // [Interface Func]
 func (r HostNetworkIOReporter) Report(item datadef.YTCItem, titlePrefix string) (content reporter.ReportContent, err error) {
-	title := fmt.Sprintf("%s %s", titlePrefix, baseinfo.BaseInfoChineseName[item.Name])
+	title := fmt.Sprintf("%s %s", titlePrefix, i18nnames.GetBaseInfoItemName(item.Name))
 	fontSize := reporter.FONT_SIZE_H2
 	txt := reporter.GenTxtTitle(title)
 	markdown := reporter.GenMarkdownTitle(title, fontSize)
@@ -170,14 +166,14 @@ func (r HostNetworkIOReporter) genSarReportContent(sarData map[int64]map[string]
 
 	tw := commons.ReporterWriter.NewTableWriter()
 	tw.AppendHeader(table.Row{
-		"时间",
-		"每秒钟接收的数据包数量",
-		"每秒钟发送的数据包数量",
-		"每秒钟接收的数据量",
-		"每秒钟发送的数据量",
-		"每秒钟接收的压缩数据包数量",
-		"每秒钟发送的压缩数据包数量",
-		"每秒钟接收的多播数据包数量",
+		i18n.T("report.network_sar_time"),
+		i18n.T("report.network_sar_rx_packets"),
+		i18n.T("report.network_sar_tx_packets"),
+		i18n.T("report.network_sar_rx_bytes"),
+		i18n.T("report.network_sar_tx_bytes"),
+		i18n.T("report.network_sar_rx_compressed"),
+		i18n.T("report.network_sar_tx_compressed"),
+		i18n.T("report.network_sar_rx_multicast"),
 	})
 	for _, key := range keys {
 		if confdef.IsDiscardNetwork(key) {
@@ -200,12 +196,12 @@ func (r HostNetworkIOReporter) genSarReportContent(sarData map[int64]map[string]
 				p.Rxmcst,
 			})
 			row := make(map[string]interface{})
-			row[_key_time] = time.Unix(p.timestamp, 0).Format(timedef.TIME_FORMAT)
+			row[_key_time_network] = time.Unix(p.timestamp, 0).Format(timedef.TIME_FORMAT)
 			row[_key_network_in] = numutil.TruncateFloat64(p.RxkB, 2)
 			row[_key_network_out] = numutil.TruncateFloat64(p.TxkB, 2)
 			rows = append(rows, row)
 		}
-		c := reporter.GenReportContentByWriterAndTitle(tw, fmt.Sprintf("网络接口：%s", key), reporter.FONT_SIZE_H4)
+		c := reporter.GenReportContentByWriterAndTitle(tw, fmt.Sprintf("%s: %s", i18n.T("report.network_interface"), key), reporter.FONT_SIZE_H4)
 		content.Txt += c.Txt + stringutil.STR_NEWLINE
 		content.Markdown += c.Markdown + stringutil.STR_NEWLINE
 		graphName := _graph_current_network_in_out + key
@@ -213,8 +209,8 @@ func (r HostNetworkIOReporter) genSarReportContent(sarData map[int64]map[string]
 		if isHistory {
 			graphName = _graph_history_network_in_out + key
 		}
-		content.HTML += reporter.GenHTMLTitle(_graph_name_network_in_out, reporter.FONT_SIZE_H4) + htmldef.GenGraphElement(graphName)
-		content.Graph = htmldef.GenGraphData(graphName, rows, _key_time, _yKeysNetworkInOut, _yLabelsNetworkInOut)
+		content.HTML += reporter.GenHTMLTitle(i18n.T("report.graph_network_in_out"), reporter.FONT_SIZE_H4) + htmldef.GenGraphElement(graphName)
+		content.Graph = htmldef.GenGraphData(graphName, rows, _key_time_network, _yKeysNetworkInOut, []string{i18n.T("report.label_network_in"), i18n.T("report.label_network_out")})
 		tw.ResetRows()
 	}
 	return
@@ -240,17 +236,17 @@ func (r HostNetworkIOReporter) genGopsutilReportContent(gopsutilData map[int64]m
 
 	tw := commons.ReporterWriter.NewTableWriter()
 	tw.AppendHeader(table.Row{
-		"时间",
-		"每秒钟接收的数据包数量",
-		"每秒钟发送的数据包数量",
-		"每秒钟接收的数据量",
-		"每秒钟发送的数据量",
-		"接收过程中的错误数",
-		"发送过程中的错误数",
-		"被丢弃的传入数据包数",
-		"被丢弃的传出数据包数",
-		"接收过程中的FIFO缓冲区错误数",
-		"发送过程中的FIFO缓冲区错误数",
+		i18n.T("report.network_gopsutil_time"),
+		i18n.T("report.network_gopsutil_rx_packets"),
+		i18n.T("report.network_gopsutil_tx_packets"),
+		i18n.T("report.network_gopsutil_rx_bytes"),
+		i18n.T("report.network_gopsutil_tx_bytes"),
+		i18n.T("report.network_gopsutil_rx_errors"),
+		i18n.T("report.network_gopsutil_tx_errors"),
+		i18n.T("report.network_gopsutil_rx_dropped"),
+		i18n.T("report.network_gopsutil_tx_dropped"),
+		i18n.T("report.network_gopsutil_rx_fifo"),
+		i18n.T("report.network_gopsutil_tx_fifo"),
 	})
 	for _, key := range keys {
 		if confdef.IsDiscardNetwork(key) {
@@ -276,25 +272,25 @@ func (r HostNetworkIOReporter) genGopsutilReportContent(gopsutilData map[int64]m
 				p.Fifoout,
 			})
 			row := make(map[string]interface{})
-			row[_key_time] = time.Unix(p.timestamp, 0).Format(timedef.TIME_FORMAT)
+			row[_key_time_network] = time.Unix(p.timestamp, 0).Format(timedef.TIME_FORMAT)
 			row[_key_network_in] = numutil.TruncateFloat64(p.RxkB, 2)
 			row[_key_network_out] = numutil.TruncateFloat64(p.TxkB, 2)
 			rows = append(rows, row)
 		}
-		c := reporter.GenReportContentByWriterAndTitle(tw, fmt.Sprintf("网络接口：%s", key), reporter.FONT_SIZE_H4)
+		c := reporter.GenReportContentByWriterAndTitle(tw, fmt.Sprintf("%s: %s", i18n.T("report.network_interface"), key), reporter.FONT_SIZE_H4)
 		content.Txt += c.Txt + stringutil.STR_NEWLINE
 		content.Markdown += c.Markdown + stringutil.STR_NEWLINE
-		content.HTML += c.HTML + stringutil.STR_NEWLINE
 		graphName := _graph_current_network_in_out + key
-		content.HTML += reporter.GenHTMLTitle(_graph_name_network_in_out, reporter.FONT_SIZE_H4) + htmldef.GenGraphElement(graphName)
-		content.Graph = htmldef.GenGraphData(graphName, rows, _key_time, _yKeysNetworkInOut, _yLabelsNetworkInOut)
+		content.HTML += c.HTML + stringutil.STR_NEWLINE
+		content.HTML += reporter.GenHTMLTitle(i18n.T("report.graph_network_in_out"), reporter.FONT_SIZE_H4) + htmldef.GenGraphElement(graphName)
+		content.Graph = htmldef.GenGraphData(graphName, rows, _key_time_network, _yKeysNetworkInOut, []string{i18n.T("report.label_network_in"), i18n.T("report.label_network_out")})
 		tw.ResetRows()
 	}
 	return
 }
 
 func (r HostNetworkIOReporter) genHistoryContent(historyItem datadef.YTCItem, titlePrefix string) (historyItemContent reporter.ReportContent, err error) {
-	title := fmt.Sprintf("%s.1 %s", titlePrefix, baseinfo.BaseInfoChildChineseName[baseinfo.KEY_HISTORY])
+	title := fmt.Sprintf("%s.1 %s", titlePrefix, i18nnames.GetBaseInfoChildItemName(baseinfo.KEY_HISTORY))
 	fontSize := reporter.FONT_SIZE_H3
 	if len(historyItem.Error) != 0 {
 		ew := commons.ReporterWriter.NewErrorWriter(historyItem.Error, historyItem.Description)
@@ -316,7 +312,7 @@ func (r HostNetworkIOReporter) genHistoryContent(historyItem datadef.YTCItem, ti
 }
 
 func (r HostNetworkIOReporter) genCurrentContent(currentItem datadef.YTCItem, titlePrefix string) (currentItemContent reporter.ReportContent, err error) {
-	title := fmt.Sprintf("%s.2 %s", titlePrefix, baseinfo.BaseInfoChildChineseName[baseinfo.KEY_CURRENT])
+	title := fmt.Sprintf("%s.2 %s", titlePrefix, i18nnames.GetBaseInfoChildItemName(baseinfo.KEY_CURRENT))
 	fontSize := reporter.FONT_SIZE_H3
 	if len(currentItem.Error) != 0 {
 		ew := commons.ReporterWriter.NewErrorWriter(currentItem.Error, currentItem.Description)

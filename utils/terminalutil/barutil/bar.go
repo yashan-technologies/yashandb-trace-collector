@@ -7,6 +7,8 @@ import (
 
 	"ytc/defs/bashdef"
 	"ytc/defs/collecttypedef"
+	"ytc/i18n"
+	"ytc/internal/modules/ytc/collect/commons/i18nnames"
 
 	mpb "github.com/vbauerster/mpb/v8"
 	"github.com/vbauerster/mpb/v8/decor"
@@ -71,7 +73,7 @@ func (b *bar) draw() {
 		mpb.AppendDecorators(
 			decor.OnComplete(
 				// ETA decorator with ewma age of 30
-				decor.Name("collecting"), "done",
+				decor.Name(i18n.T("collect.progress_collecting")), i18n.T("collect.progress_done"),
 			),
 		),
 	)
@@ -125,11 +127,24 @@ func (b *bar) getCutIndex(str string) int {
 }
 
 func (b *bar) genMsg(name string, err error) []string {
+	// Translate module name based on bar type
+	localizedName := name
+	switch b.Name {
+	case collecttypedef.TYPE_BASE:
+		localizedName = i18nnames.GetBaseInfoItemName(name)
+	case collecttypedef.TYPE_DIAG:
+		localizedName = i18nnames.GetDiagItemName(name)
+	case collecttypedef.TYPE_PERF:
+		localizedName = i18nnames.GetPerfItemName(name)
+	}
+	
 	var msg string
 	if err == nil {
-		msg = fmt.Sprintf("%s has been %s", name, bashdef.WithGreen("completed"))
+		completedText := bashdef.WithGreen(i18n.T("collect.item_completed"))
+		msg = localizedName + " " + completedText
 	} else {
-		msg = fmt.Sprintf("%s has been %s err: %s", name, bashdef.WithRed("failed"), err.Error())
+		failedText := bashdef.WithRed(i18n.T("collect.item_failed"))
+		msg = fmt.Sprintf("%s %s err: %s", localizedName, failedText, err.Error())
 	}
 	lines := b.splitMsg(msg)
 	return lines
