@@ -59,7 +59,7 @@ build: go_build
 	@mkdir -p $(DIR_TO_MAKE) 
 	@cp -r $(FILE_TO_COPY) $(PKG_PATH)
 	@cp -r ./ytc-doc $(DOCS_PATH)/markdown
-	@cp ./ytc.pdf $(DOCS_PATH)
+	@cp ./ytc.pdf ./ytc_en.pdf $(DOCS_PATH)
 	@mv $(BIN_FILES) $(BIN_PATH)
 	@> $(LOG_PATH)/ytcctl.log
 	@> $(LOG_PATH)/console.out
