@@ -2,7 +2,8 @@ package errdef
 
 import (
 	"errors"
-	"fmt"
+
+	"ytc/i18n"
 )
 
 var (
@@ -51,21 +52,21 @@ func NewErrPermissionDenied(user string, path string) *ErrPermissionDenied {
 }
 
 func (e *ErrFileNotFound) Error() string {
-	return fmt.Sprintf("%s is not existed", e.Fname)
+	return i18n.TWithData("err.file_not_found", map[string]interface{}{"Fname": e.Fname})
 }
 
 func (e *ErrFileParseFailed) Error() string {
-	return fmt.Sprintf("parse %s failed: %s", e.Fname, e.Err)
+	return i18n.TWithData("err.file_parse_failed", map[string]interface{}{"Fname": e.Fname, "Err": e.Err})
 }
 
 func (e *ErrCmdNotExist) Error() string {
-	return fmt.Sprintf("command: %s not exist", e.Cmd)
+	return i18n.TWithData("err.cmd_not_exist", map[string]interface{}{"Cmd": e.Cmd})
 }
 
 func (e *ErrCmdNeedRoot) Error() string {
-	return fmt.Sprintf("command: %s need run with sudo or root", e.Cmd)
+	return i18n.TWithData("err.cmd_need_root", map[string]interface{}{"Cmd": e.Cmd})
 }
 
 func (e *ErrPermissionDenied) Error() string {
-	return fmt.Sprintf("the current user %s does not have permission to: %s", e.User, e.FileName)
+	return i18n.TWithData("err.permission_denied", map[string]interface{}{"User": e.User, "FileName": e.FileName})
 }

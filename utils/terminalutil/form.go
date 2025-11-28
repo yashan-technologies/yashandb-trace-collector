@@ -4,6 +4,7 @@ import (
 	"errors"
 
 	"ytc/defs/errdef"
+	"ytc/i18n"
 	"ytc/log"
 
 	tcell "github.com/gdamore/tcell/v2"
@@ -14,9 +15,6 @@ const (
 	FORM_EXIT_CONTINUE     = 0
 	FORM_EXIT_NOT_CONTINUE = 1
 	FORM_EXIT_CTRLC        = 2
-
-	CONTINUE = "Continue"
-	BACK     = "Back"
 )
 
 type WithOption func(c *CollectForm)
@@ -139,16 +137,18 @@ func (f *CollectForm) Validate() error {
 }
 
 func (f *CollectForm) ConfrimExit(errMsg string) {
+	continueBtn := i18n.T("form.button_continue")
+	backBtn := i18n.T("form.button_back")
 	modal := tview.NewModal().
 		SetBackgroundColor(tcell.ColorRed).
 		SetText(errMsg).
-		AddButtons([]string{CONTINUE, BACK}).
+		AddButtons([]string{continueBtn, backBtn}).
 		SetDoneFunc(func(buttonIndex int, buttonLabel string) {
-			if buttonLabel == CONTINUE {
+			if buttonLabel == continueBtn {
 				f.Stop(FORM_EXIT_CONTINUE)
 				return
 			}
-			if buttonLabel == BACK {
+			if buttonLabel == backBtn {
 				f.app.SetRoot(f.form, false)
 				return
 			}

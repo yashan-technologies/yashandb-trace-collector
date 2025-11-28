@@ -3,6 +3,7 @@ package reporter
 import (
 	"fmt"
 
+	"ytc/i18n"
 	"ytc/utils/stringutil"
 
 	"github.com/jedib0t/go-pretty/v6/list"
@@ -83,8 +84,8 @@ func (rw *ReportWriter) NewErrorWriter(err, description string) *ErrorWriter {
 
 	// append data to listWriter
 	lw := rw.NewListWriter()
-	lw.AppendItem(fmt.Sprintf("报错：%s", err))
-	lw.AppendItem(fmt.Sprintf("描述：%s", description))
+	lw.AppendItem(fmt.Sprintf("%s: %s", i18n.T("report.error_label"), err))
+	lw.AppendItem(fmt.Sprintf("%s: %s", i18n.T("report.description_label"), description))
 
 	return &ErrorWriter{listWriter: lw}
 }

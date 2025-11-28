@@ -2,6 +2,8 @@ package htmldef
 
 import (
 	"fmt"
+
+	"ytc/i18n"
 )
 
 const _html_template = `
@@ -17,7 +19,7 @@ const _html_template = `
     %s
 </head>
 <body>
-    <button class="ytc_button" onclick="toggleToc()">显示/隐藏目录</button>
+    <button class="ytc_button" onclick="toggleToc()">%s</button>
     <div id="catalogs"></div>
     %s
     <script>
@@ -80,5 +82,6 @@ const _html_template = `
 `
 
 func GenHTML(content, graph string) string {
-	return fmt.Sprintf(_html_template, _html_css, content, graph)
+	toggleTocText := i18n.T("report.toggle_toc_button")
+	return fmt.Sprintf(_html_template, _html_css, toggleTocText, content, graph)
 }

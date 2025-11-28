@@ -1,0 +1,955 @@
+[form.save]
+other = "保存"
+
+[form.quit]
+other = "退出"
+
+[form.enter_header]
+other = "输入 Yashan Trace Collector 数据"
+
+[form.yasdb_internal_data_not_collect]
+other = "yasdb 内部数据将不会被收集，确定继续吗？"
+
+[form.please_enter]
+other = "请输入 {{.Label}}"
+
+[form.button_continue]
+other = "继续"
+
+[form.button_back]
+other = "返回"
+
+[collect.stopping]
+other = "正在停止收集..."
+
+[collect.quitting]
+other = "退出收集"
+
+[collect.starting]
+other = "正在开始收集..."
+
+[collect.starting_collect]
+other = "Starting collect..."
+
+[collect.tips_for_you]
+other = "这里有一些提示给您"
+
+[collect.header_type]
+other = "类型"
+
+[collect.header_item]
+other = "收集项"
+
+[collect.header_desc]
+other = "描述"
+
+[collect.header_tips]
+other = "提示"
+
+[collect.header_collected]
+other = "是否收集?"
+
+[collect.continue_confirm]
+other = "\n您确定要继续收集吗 [y/n] ?\n"
+
+[collect.validation_failed]
+other = "部分验证失败，中止收集"
+
+[collect.following_modules]
+other = "将收集以下模块"
+
+[collect.packing_results]
+other = "正在打包收集结果，请稍候..."
+
+[collect.gen_result_failed]
+other = "生成结果失败，错误: {{.Err}}"
+
+[collect.completed_msg]
+other = "收集已{{.Status}}，结果已保存至 {{.Path}}，感谢您的使用。"
+
+[collect.completed]
+other = "完成"
+
+[collect.progress_done]
+other = "完成"
+
+[collect.progress_collecting]
+other = "收集中"
+
+[collect.item_completed]
+other = "已完成"
+
+[collect.item_failed]
+other = "已失败"
+
+[app.header_key]
+other = "键"
+
+[app.header_value]
+other = "值"
+
+[app.info]
+other = "应用信息"
+
+[app.version]
+other = "应用版本"
+
+[app.go_version]
+other = "Go 版本"
+
+[app.git_commit]
+other = "Git 提交"
+
+[app.git_describe]
+other = "Git 描述"
+
+[err.none_collect_item]
+other = "没有收集项将被收集，跳过本次收集"
+
+[validate.include_contains_invalid]
+other = "无法收集: {{.Include}}，因为它包含无效路径: {{.InvalidPath}}"
+
+[validate.invalid_contains_include]
+other = "无法收集: {{.Include}}，因为无效路径: {{.InvalidPath}} 包含了它"
+
+[validate.range_help]
+other = "您必须确保 (M|d|h|m) 前面的数字大于 0"
+
+[validate.type_help]
+other = "您可以选择 (base|diag|perf) 中的一个或多个，用 ',' 分隔，例如 'base,diag,perf'。"
+
+[err.flag_invalid]
+other = "{{.Flag}} 的值: {{.Value}} 无效"
+
+[err.flag_available_formats]
+other = "，可用的输入格式如下: [{{.Examples}}]"
+
+[err.end_less_start]
+other = "开始时间应该小于结束时间"
+
+[err.start_should_less_curr]
+other = "开始时间应该小于当前时间"
+
+[err.greater_max_dur]
+other = "结束时间-开始时间应该小于 {{.MaxDuration}}，您可以修改配置文件 ./config/strategy.toml 中的 'max_duration'"
+
+[err.less_min_dur]
+other = "结束时间-开始时间应该大于 {{.MinDuration}}，您可以修改配置文件 ./config/strategy.toml 中的 'min_duration'"
+
+[err.path_format]
+other = "路径格式错误，请检查"
+
+[err.file_not_found]
+other = "{{.Fname}} 不存在"
+
+[err.file_parse_failed]
+other = "解析 {{.Fname}} 失败: {{.Err}}"
+
+[err.cmd_not_exist]
+other = "命令: {{.Cmd}} 不存在"
+
+[err.cmd_need_root]
+other = "命令: {{.Cmd}} 需要使用 sudo 或 root 运行"
+
+[err.permission_denied]
+other = "当前用户 {{.User}} 没有权限访问: {{.FileName}}"
+
+# Common module messages
+[common.file_not_exist_desc]
+other = "{{.Path}} 不存在"
+
+[common.file_permission_denied_desc]
+other = "当前用户: {{.User}} 访问: {{.Path}} 权限被拒绝"
+
+[common.file_not_exist_tips]
+other = "您可以检查 {{.Path}} 是否存在"
+
+[common.item_empty_tips]
+other = "您可以运行 'ytcctl collect' 并填写 yashandb 用户名和密码"
+
+[common.file_permission_tips]
+other = "您可以检查当前用户是否有权限访问 {{.Path}}，并使用该文件所属的用户执行 'ytcctl collect'"
+
+[common.database_not_open_tips]
+other = "您可以先打开数据库"
+
+[common.invalid_user_password_tips]
+other = "您可以输入正确的用户名和密码"
+
+[common.lack_login_permission_tips]
+other = "您可以授予该用户 'Create Session' 权限"
+
+[common.lack_necessary_permission_tips]
+other = "您可以请求数据库管理员或指定的安全管理员授予该用户必要的权限"
+
+[common.object_not_exist_tips]
+other = "对象不存在，请输入正确的对象名称"
+
+[common.yas_other_tips]
+other = "您可以参考官方文档，查看错误信息，然后检查数据库"
+
+[common.connect_failed_tips]
+other = "您可以检查 yashandb 进程"
+
+[common.login_error]
+other = "登录 yasdb 失败: {{.Error}}"
+
+[common.run_with_sudo_tips]
+other = "您可以运行 'sudo ytcctl collect'"
+
+[common.run_with_root_tips]
+other = "您可以使用 root 用户运行 'ytcctl collect'"
+
+# Base module messages
+[base.sar_not_exist_tips]
+other = "可能无法收集历史负载信息，默认将收集当前负载信息，或者您可以运行 {{.InstallCmd}}"
+
+[base.yasdb_instance_status_tips]
+other = "匹配到 yasdb 进程: {{.Process}}，默认从进程命令行收集"
+
+[base.get_osrelease_error_desc]
+other = "获取操作系统版本失败: {{.Error}}"
+
+[base.default_parameter_tips]
+other = "默认从 {{.Path}} 收集参数"
+
+# Diagnosis module messages
+[diag.bash_history_desc]
+other = "bash 历史记录的数据源是 $HISTFILE 文件。"
+
+[diag.bash_history_tips]
+other = "如果您需要保留当前终端的历史记录，请先执行 'history -a'。"
+
+[diag.bash_history_no_permission]
+other = "没有权限收集 root 用户的 bash 历史记录"
+
+[diag.default_adr_tips]
+other = "默认从以下路径收集 adr: {{.Path}}"
+
+[diag.match_process_error_desc]
+other = "匹配 yasdb 进程失败，匹配条件: {{.Condition}}，错误: {{.Error}}"
+
+[diag.match_process_error_tips]
+other = "您可以稍后重试"
+
+[diag.process_not_found_desc]
+other = "未找到进程，匹配 yasdb 进程条件: {{.Condition}}"
+
+[diag.process_not_found_tips]
+other = "您可以检查 yasdb 状态"
+
+[diag.default_runlog_tips]
+other = "默认从以下路径收集 run.log: {{.Path}}"
+
+[diag.coredump_error_desc]
+other = "获取 coredump 路径失败: {{.Error}}"
+
+[diag.coredump_relative_desc]
+other = "当前 core pattern: {{.Pattern}} 是相对路径"
+
+[diag.coredump_relative_tips]
+other = "默认从以下路径收集 core 文件: {{.Path}}"
+
+[diag.get_syslog_error_desc]
+other = "获取系统日志失败: {{.Error}}"
+
+[diag.syslog_not_found_desc]
+other = "{{.Path1}} 和 {{.Path2}} 都不存在"
+
+[diag.syslog_not_found_tips]
+other = "不收集系统日志"
+
+[diag.dmesg_need_root_desc]
+other = "命令 dmesg 需要 root 权限"
+
+# Performance module messages
+[perf.user_not_sys_desc]
+other = "当前 yashandb 用户: {{.User}} 不是 'SYS'"
+
+[perf.user_not_sys_tips]
+other = "您可以将 yashandb 用户更改为 'SYS'"
+
+[perf.default_slowsql_tips]
+other = "默认从以下路径收集 slow.log: {{.Path}}"
+
+[perf.awr_timeout_desc]
+other = "生成 AWR 报告可能需要较长时间。"
+
+[perf.awr_timeout_tips]
+other = "我们已定义收集 AWR 报告的超时时间: {{.Timeout}}，您可以修改 strategy.toml 中的 'awr_timeout' 来自定义超时时间"
+
+[perf.awr_skip_tips]
+other = "数据库不在读写模式，跳过生成 AWR 报告"
+
+[perf.no_satisfied_snap_desc]
+other = "没有满足条件的快照 ID"
+
+[perf.no_satisfied_tips]
+other = "您可以适当增加收集间隔"
+
+# Description messages
+[desc.default]
+other = "请查看 YTC 产品文档或日志定位原因"
+
+[desc.no_sar_command]
+other = "找不到 sar 命令，请检查是否安装 sar"
+
+[desc.no_permission]
+other = "{{.Path}} 不存在或无权限，请检查文件权限"
+
+[desc.ubuntu_firewalld]
+other = "查看 Ubuntu 系统防火墙状态需要 root 权限"
+
+[desc.kylin_dmesg]
+other = "执行 dmesg 命令失败，请查看日志定位具体原因"
+
+[desc.read_coredump_path]
+other = "读取 coredump 文件夹: {{.Path}} 失败，请检查文件权限或查看日志定位具体原因"
+
+[desc.get_coredump_path]
+other = "获取系统 coredump 路径失败，请检查日志查看原因或手动修改 YTC 配置文件设置 coredump 路径"
+
+[desc.get_database_parameter]
+other = "获取数据库 {{.Parameter}} 参数失败，请检查数据库状态或查看 YTC 日志定位原因"
+
+[desc.skip_collect_database_info]
+other = "数据库连接失败，将跳过本检查项"
+
+[desc.yasdb_process_status]
+other = "获取数据库进程信息失败，请检查数据库进程是否存在"
+
+[desc.get_database_view]
+other = "查询数据库 {{.View}} 视图失败，请检查数据库状态或查看 YTC 日志定位原因"
+
+[desc.no_permission_syslog]
+other = "没有权限收集系统日志"
+
+# ==================== Report Module Names ====================
+[report.module_baseinfo]
+other = "基础信息"
+
+[report.module_diagnosis]
+other = "诊断信息"
+
+[report.module_performance]
+other = "性能调优信息"
+
+[report.module_extra]
+other = "额外收集项"
+
+# ==================== Report BaseInfo Items ====================
+[report.base_yasdb_version]
+other = "数据库版本"
+
+[report.base_yasdb_parameter]
+other = "数据库配置"
+
+[report.base_host_os_info]
+other = "操作系统信息"
+
+[report.base_host_firewalld]
+other = "防火墙配置"
+
+[report.base_host_cpu]
+other = "CPU"
+
+[report.base_host_disk]
+other = "磁盘"
+
+[report.base_host_network]
+other = "网络配置"
+
+[report.base_host_memory]
+other = "内存"
+
+[report.base_host_network_io]
+other = "网络流量"
+
+[report.base_host_cpu_usage]
+other = "CPU占用分析"
+
+[report.base_host_disk_io]
+other = "磁盘I/O"
+
+[report.base_host_memory_usage]
+other = "内存容量检查"
+
+# ==================== Report BaseInfo Child Items ====================
+[report.base_yasdb_ini]
+other = "数据库实例配置文件：yasdb.ini"
+
+[report.base_yasdb_parameter_view]
+other = "数据库实例参数视图：v$parameter"
+
+[report.base_history]
+other = "历史负载"
+
+[report.base_current]
+other = "当前负载"
+
+# ==================== Report Diagnosis Items ====================
+[report.diag_yasdb_adr]
+other = "数据库ADR日志"
+
+[report.diag_yasdb_runlog]
+other = "数据库run.log日志"
+
+[report.diag_yasdb_alertlog]
+other = "数据库alert.log日志"
+
+[report.diag_yasdb_process_status]
+other = "数据库进程信息"
+
+[report.diag_yasdb_instance_status]
+other = "数据库实例状态"
+
+[report.diag_yasdb_database_status]
+other = "数据库状态"
+
+[report.diag_host_systemlog]
+other = "操作系统日志"
+
+[report.diag_host_kernellog]
+other = "操作系统内核日志"
+
+[report.diag_yasdb_coredump]
+other = "CoreDump"
+
+[report.diag_host_bash_history]
+other = "操作系统Bash历史记录"
+
+# ==================== Report Performance Items ====================
+[report.perf_yasdb_awr]
+other = "AWR报告"
+
+[report.perf_yasdb_slowsql]
+other = "慢SQL"
+
+# ==================== Report Performance Child Items ====================
+[report.perf_slowsql_parameter]
+other = "慢SQL参数"
+
+[report.perf_slowsql_table]
+other = "SLOW_LOG$系统表"
+
+[report.perf_slowsql_file]
+other = "慢SQL日志文件"
+
+# ==================== Report Overview ====================
+[report.overview_title]
+other = "报告概览"
+
+[report.basic_overview]
+other = "基础概览"
+
+[report.items_overview]
+other = "收集项概览"
+
+[report.overview_item]
+other = "概览项"
+
+[report.overview_value]
+other = "概览值"
+
+[report.collect_type]
+other = "收集类型"
+
+[report.collect_range_start]
+other = "收集范围--起始时间"
+
+[report.collect_range_end]
+other = "收集范围--截止时间"
+
+[report.yasdb_home]
+other = "YashanDB信息--YASDB_HOME"
+
+[report.yasdb_data]
+other = "YashanDB信息--YASDB_DATA"
+
+[report.database_user]
+other = "数据库用户(用于收集YashanDB信息)"
+
+[report.extra_files]
+other = "额外的收集文件"
+
+[report.filtered_files]
+other = "过滤的收集文件"
+
+[report.output_dir]
+other = "收集结果存放目录"
+
+[report.task_start_time]
+other = "任务开始时间"
+
+[report.task_end_time]
+other = "任务结束时间"
+
+# ==================== Report Table Headers ====================
+[report.table_check_item]
+other = "检查项"
+
+[report.table_check_result]
+other = "检查结果"
+
+[report.table_version_info]
+other = "版本信息"
+
+[report.table_firewall_status]
+other = "防火墙状态"
+
+# ==================== Report Field Names ====================
+[report.field_hostname]
+other = "主机名称"
+
+[report.field_boot_time]
+other = "开机时间"
+
+[report.field_os]
+other = "操作系统"
+
+[report.field_platform]
+other = "发行版本"
+
+[report.field_platform_family]
+other = "系列"
+
+[report.field_kernel_version]
+other = "内核版本"
+
+[report.field_kernel_arch]
+other = "内核架构"
+
+[report.field_cpu_model]
+other = "CPU型号"
+
+[report.field_cpu_cores]
+other = "CPU核心数量"
+
+[report.field_physical_cores]
+other = "物理CPU核心"
+
+[report.field_logical_cores]
+other = "逻辑CPU核心"
+
+[report.field_cpu_frequency]
+other = "CPU主频"
+
+[report.field_vendor_id]
+other = "厂商标识ID"
+
+[report.field_disk_device]
+other = "磁盘设备"
+
+[report.field_filesystem_type]
+other = "文件系统类型"
+
+[report.field_disk_size]
+other = "磁盘大小"
+
+[report.field_used]
+other = "已使用"
+
+[report.field_available]
+other = "可用"
+
+[report.field_usage_rate]
+other = "使用率"
+
+[report.field_mount_path]
+other = "挂载路径"
+
+[report.field_mount_options]
+other = "挂载选项"
+
+[report.field_memory_size]
+other = "内存大小"
+
+[report.field_free]
+other = "空闲"
+
+[report.field_shared_memory]
+other = "共享内存"
+
+[report.field_buffer_cache]
+other = "缓冲/缓存"
+
+[report.field_system_memory]
+other = "系统内存"
+
+[report.field_swap_memory]
+other = "交换内存"
+
+# ==================== Report Status Values ====================
+[report.status_disabled]
+other = "已关闭"
+
+[report.status_enabled]
+other = "已开启"
+
+# ==================== Report Graph Names ====================
+[report.graph_cpu_usage]
+other = "CPU使用率"
+
+[report.graph_memory_usage]
+other = "内存使用率"
+
+# ==================== Report Labels ====================
+[report.label_usage]
+other = "使用率"
+
+[report.label_real_usage]
+other = "真实使用率"
+
+# ==================== Report CPU Usage Descriptions ====================
+[report.cpu_user_time]
+other = "用户空间进程所花费的CPU时间(user)"
+
+[report.cpu_nice_time]
+other = "以较低优先级运行的用户空间进程所花费的CPU时间(nice)"
+
+[report.cpu_idle_time]
+other = "CPU处于空闲状态的时间(idle)"
+
+[report.cpu_interrupt_time]
+other = "处理硬件中断的时间"
+
+[report.cpu_system_time]
+other = "system"
+
+[report.cpu_iowait_time]
+other = "iowait"
+
+[report.cpu_steal_time]
+other = "steal"
+
+[report.cpu_softirq_time]
+other = "softirq"
+
+[report.cpu_guest_time]
+other = "guest"
+
+[report.time]
+other = "时间"
+
+[report.cpu_usage_graph]
+other = "CPU使用率图表"
+
+# ==================== Report Disk IO Descriptions ====================
+[report.label_disk_iops]
+other = "IOPS"
+
+[report.label_disk_read]
+other = "磁盘读取(KB/S)"
+
+[report.label_disk_write]
+other = "磁盘写入(KB/S)"
+
+[report.graph_disk_iops]
+other = "IOPS"
+
+[report.graph_disk_read_write]
+other = "磁盘读写"
+
+[report.disk_device]
+other = "磁盘设备"
+
+[report.label_network_in]
+other = "接收流量(KB/S)"
+
+[report.label_network_out]
+other = "发送流量(KB/S)"
+
+[report.graph_network_in_out]
+other = "网络流量"
+
+# ==================== Report Memory Usage Fields ====================
+[report.memory_committed]
+other = "已提交"
+
+[report.memory_committed_percent]
+other = "已提交的内存占总内存的百分比"
+
+[report.memory_dirty]
+other = "已修改但尚未写入磁盘的脏页大小"
+
+[report.memory_real_usage]
+other = "真实内存使用率"
+
+[report.memory_commit_limit]
+other = "系统可保证的总内存使用量"
+
+[report.memory_vmalloc_used]
+other = "虚拟内存已使用"
+
+# ==================== Report Process Fields ====================
+[report.process_user]
+other = "所属用户"
+
+[report.process_cpu_usage]
+other = "CPU使用率"
+
+[report.process_memory_usage]
+other = "内存使用率"
+
+[report.process_id]
+other = "进程ID"
+
+[report.process_command]
+other = "命令行"
+
+[report.process_create_time]
+other = "创建时间"
+
+[report.process_status]
+other = "状态"
+
+# ==================== Report Child Items ====================
+[report.child_yasdb_ini]
+other = "数据库实例配置文件：yasdb.ini"
+
+[report.child_yasdb_parameter]
+other = "数据库实例参数视图：v$parameter"
+
+[report.child_history]
+other = "历史负载"
+
+[report.child_current]
+other = "当前负载"
+
+# ==================== Memory Usage Table Headers ====================
+[report.memory_table_time]
+other = "时间"
+
+[report.memory_table_total]
+other = "总内存"
+
+[report.memory_table_free]
+other = "空闲内存"
+
+[report.memory_table_used_memory]
+other = "已使用"
+
+[report.memory_table_usage_percent]
+other = "使用率"
+
+[report.memory_table_buffers]
+other = "缓冲(buffers)"
+
+[report.memory_table_cache]
+other = "缓存(cache)"
+
+[report.memory_table_available]
+other = "可用"
+
+[report.memory_table_commit]
+other = "已提交"
+
+[report.memory_table_commit_percent]
+other = "已提交的内存占总内存的百分比"
+
+[report.memory_table_active]
+other = "活跃内存的大小"
+
+[report.memory_table_inactive]
+other = "非活跃内存的大小"
+
+[report.memory_table_dirty]
+other = "已修改但尚未写入磁盘的脏页大小"
+
+[report.memory_table_real_usage]
+other = "真实内存使用率"
+
+# ==================== Slow SQL ====================
+[report.slowsql_param_name]
+other = "慢SQL参数名称"
+
+[report.slowsql_param_value]
+other = "参数值"
+
+# ==================== Error Writer ====================
+[report.error_label]
+other = "报错"
+
+[report.description_label]
+other = "描述"
+
+# ==================== Extra File Collect ====================
+[report.extra_current_path]
+other = "当前路径"
+
+[report.extra_source_path]
+other = "源文件路径"
+
+# ==================== HTML UI ====================
+[report.toggle_toc_button]
+other = "显示/隐藏目录"
+
+# ==================== Parameter Tables ====================
+[report.param_name]
+other = "参数名称"
+
+[report.param_value]
+other = "参数值"
+
+# ==================== Disk I/O Tables ====================
+[report.disk_time]
+other = "时间"
+
+[report.disk_iops]
+other = "IOPS"
+
+[report.disk_read_per_sec]
+other = "每秒钟读取"
+
+[report.disk_write_per_sec]
+other = "每秒钟写入"
+
+[report.disk_avg_req_size]
+other = "平均每个请求的扇区数"
+
+[report.disk_avg_queue_len]
+other = "平均队列长度"
+
+[report.disk_avg_wait_time]
+other = "平均 I/O 请求的等待时间"
+
+[report.disk_avg_service_time]
+other = "平均 I/O 请求的服务时间"
+
+[report.disk_utilization]
+other = "设备的利用率"
+
+[report.disk_read_count_per_sec]
+other = "每秒读次数"
+
+[report.disk_write_count_per_sec]
+other = "每秒写次数"
+
+[report.disk_label]
+other = "设备标签"
+
+# ==================== Database Status ====================
+[report.db_status]
+other = "状态"
+
+[report.db_open_mode]
+other = "开启模式"
+
+[report.storage_path]
+other = "存放路径"
+
+# ==================== Memory Usage Gopsutil Table ====================
+[report.memory_gopsutil_time]
+other = "时间"
+
+[report.memory_gopsutil_total]
+other = "总内存"
+
+[report.memory_gopsutil_free]
+other = "空闲内存"
+
+[report.memory_gopsutil_used]
+other = "已使用"
+
+[report.memory_gopsutil_usage_percent]
+other = "使用率"
+
+[report.memory_gopsutil_buffers]
+other = "缓冲(buffers)"
+
+[report.memory_gopsutil_cache]
+other = "缓存(cache)"
+
+[report.memory_gopsutil_available]
+other = "可用"
+
+[report.memory_gopsutil_commit_limit]
+other = "系统可保证的总内存使用量"
+
+[report.memory_gopsutil_swap_total]
+other = "虚拟内存总大小"
+
+[report.memory_gopsutil_swap_used]
+other = "虚拟内存已使用"
+
+# ==================== Network I/O SAR Table ====================
+[report.network_sar_time]
+other = "时间"
+
+[report.network_sar_rx_packets]
+other = "每秒钟接收的数据包数量"
+
+[report.network_sar_tx_packets]
+other = "每秒钟发送的数据包数量"
+
+[report.network_sar_rx_bytes]
+other = "每秒钟接收的数据量"
+
+[report.network_sar_tx_bytes]
+other = "每秒钟发送的数据量"
+
+[report.network_sar_rx_compressed]
+other = "每秒钟接收的压缩数据包数量"
+
+[report.network_sar_tx_compressed]
+other = "每秒钟发送的压缩数据包数量"
+
+[report.network_sar_rx_multicast]
+other = "每秒钟接收的多播数据包数量"
+
+# ==================== Network I/O Gopsutil Table ====================
+[report.network_gopsutil_time]
+other = "时间"
+
+[report.network_gopsutil_rx_packets]
+other = "每秒钟接收的数据包数量"
+
+[report.network_gopsutil_tx_packets]
+other = "每秒钟发送的数据包数量"
+
+[report.network_gopsutil_rx_bytes]
+other = "每秒钟接收的数据量"
+
+[report.network_gopsutil_tx_bytes]
+other = "每秒钟发送的数据量"
+
+[report.network_gopsutil_rx_errors]
+other = "接收过程中的错误数"
+
+[report.network_gopsutil_tx_errors]
+other = "发送过程中的错误数"
+
+[report.network_gopsutil_rx_dropped]
+other = "被丢弃的传入数据包数"
+
+[report.network_gopsutil_tx_dropped]
+other = "被丢弃的传出数据包数"
+
+[report.network_gopsutil_rx_fifo]
+other = "接收过程中的FIFO缓冲区错误数"
+
+[report.network_gopsutil_tx_fifo]
+other = "发送过程中的FIFO缓冲区错误数"
+
+# ==================== Network Configuration Table ====================
+[report.network_interface]
+other = "网络接口"
+
+[report.network_ip_address]
+other = "IP地址"
+
+[report.network_mac_address]
+other = "MAC地址"
+
+# ==================== Collect Type Names ====================
+[collect.type_baseinfo]
+other = "基础信息"
+
+[collect.type_diagnosis]
+other = "诊断信息"
+
+[collect.type_performance]
+other = "性能调优信息"
+
+[collect.type_extra]
+other = "额外收集项"

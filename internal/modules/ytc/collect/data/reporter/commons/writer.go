@@ -1,6 +1,7 @@
 package commons
 
 import (
+	"ytc/i18n"
 	"ytc/internal/modules/ytc/collect/resultgenner/reporter"
 
 	"github.com/jedib0t/go-pretty/v6/table"
@@ -16,5 +17,5 @@ func GenStringWriter(title string, rows ...string) reporter.Writer {
 }
 
 func GenPathWriter(path string) reporter.Writer {
-	return GenStringWriter("存放路径", path)
+	return GenStringWriter(i18n.T("report.storage_path"), path)
 }

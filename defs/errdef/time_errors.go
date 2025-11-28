@@ -2,7 +2,8 @@ package errdef
 
 import (
 	"errors"
-	"fmt"
+
+	"ytc/i18n"
 )
 
 var (
@@ -19,7 +20,7 @@ func NewGreaterMaxDur(max string) *ErrGreaterMaxDur {
 }
 
 func (e ErrGreaterMaxDur) Error() string {
-	return fmt.Sprintf("end-start time should be less than %s, you can modify the configuration file ./config/strategy.toml 'max_duration'", e.MaxDuration)
+	return i18n.TWithData("err.greater_max_dur", map[string]interface{}{"MaxDuration": e.MaxDuration})
 }
 
 type ErrLessMinDur struct {
@@ -31,5 +32,5 @@ func NewLessMinDur(min string) *ErrLessMinDur {
 }
 
 func (e ErrLessMinDur) Error() string {
-	return fmt.Sprintf("end-start time should be greater than %s, you can modify the configuration file ./config/strategy.toml 'min_duration'", e.MinDuration)
+	return i18n.TWithData("err.less_min_dur", map[string]interface{}{"MinDuration": e.MinDuration})
 }

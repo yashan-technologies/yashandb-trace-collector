@@ -4,9 +4,10 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"ytc/i18n"
 	"ytc/internal/modules/ytc/collect/commons/datadef"
+	"ytc/internal/modules/ytc/collect/commons/i18nnames"
 	"ytc/internal/modules/ytc/collect/data/reporter/commons"
-	"ytc/internal/modules/ytc/collect/diagnosis"
 	"ytc/internal/modules/ytc/collect/resultgenner/reporter"
 	"ytc/utils/processutil"
 
@@ -25,7 +26,7 @@ func NewYashanDBProcessStatusReporter() YashanDBProcessStatusReporter {
 
 // [Interface Func]
 func (r YashanDBProcessStatusReporter) Report(item datadef.YTCItem, titlePrefix string) (content reporter.ReportContent, err error) {
-	title := fmt.Sprintf("%s %s", titlePrefix, diagnosis.DiagChineseName[item.Name])
+	title := fmt.Sprintf("%s %s", titlePrefix, i18nnames.GetDiagItemName(item.Name))
 	fontSize := reporter.FONT_SIZE_H2
 
 	// report error
@@ -74,13 +75,13 @@ func (r YashanDBProcessStatusReporter) parseYashanDBProcess(item datadef.YTCItem
 func (r YashanDBProcessStatusReporter) genReportContentWriter(p processutil.Process) reporter.Writer {
 	tw := commons.ReporterWriter.NewTableWriter()
 	tw.AppendHeader(table.Row{
-		"进程ID",
-		"命令行",
-		"所属用户",
-		"创建时间",
-		"CPU使用率",
-		"内存使用率",
-		"状态",
+		i18n.T("report.process_id"),
+		i18n.T("report.process_command"),
+		i18n.T("report.process_user"),
+		i18n.T("report.process_create_time"),
+		i18n.T("report.process_cpu_usage"),
+		i18n.T("report.process_memory_usage"),
+		i18n.T("report.process_status"),
 	})
 
 	tw.AppendRow(table.Row{

@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"ytc/defs/compiledef"
+	"ytc/i18n"
 
 	"git.yasdb.com/go/yasutil/tabler"
 	"github.com/alecthomas/kong"
@@ -22,13 +23,13 @@ func (s showFlag) BeforeReset(app *kong.Kong, vars kong.Vars) error {
 // genContent generates data of software compilation information.
 func (s showFlag) genContent() string {
 	titles := []*tabler.RowTitle{
-		{Name: "KEY"},
-		{Name: "VALUE"},
+		{Name: i18n.T("app.header_key")},
+		{Name: i18n.T("app.header_value")},
 	}
-	table := tabler.NewTable("App Information", titles...)
-	_ = table.AddColumn("App Version", compiledef.GetAPPVersion())
-	_ = table.AddColumn("Go Version", compiledef.GetGoVersion())
-	_ = table.AddColumn("Git Commit", compiledef.GetGitCommitID())
-	_ = table.AddColumn("Git Describe", compiledef.GetGitDescribe())
+	table := tabler.NewTable(i18n.T("app.info"), titles...)
+	_ = table.AddColumn(i18n.T("app.version"), compiledef.GetAPPVersion())
+	_ = table.AddColumn(i18n.T("app.go_version"), compiledef.GetGoVersion())
+	_ = table.AddColumn(i18n.T("app.git_commit"), compiledef.GetGitCommitID())
+	_ = table.AddColumn(i18n.T("app.git_describe"), compiledef.GetGitDescribe())
 	return table.String()
 }

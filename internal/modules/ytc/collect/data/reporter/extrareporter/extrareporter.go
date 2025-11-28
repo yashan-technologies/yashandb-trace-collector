@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"ytc/i18n"
 	"ytc/internal/modules/ytc/collect/commons/datadef"
 	"ytc/internal/modules/ytc/collect/data/reporter/commons"
 	"ytc/internal/modules/ytc/collect/extra"
@@ -46,7 +47,7 @@ func (r ExtraFileReporter) Report(item datadef.YTCItem, titlePrefix string) (con
 
 func (r ExtraFileReporter) genReportContentWriter(pathMap map[string]string) reporter.Writer {
 	tw := commons.ReporterWriter.NewTableWriter()
-	tw.AppendHeader(table.Row{"当前路径", "源文件路径"})
+	tw.AppendHeader(table.Row{i18n.T("report.extra_current_path"), i18n.T("report.extra_source_path")})
 	for k, v := range pathMap {
 		tw.AppendRow(table.Row{k, v})
 	}

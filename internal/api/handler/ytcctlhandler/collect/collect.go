@@ -11,8 +11,10 @@ import (
 	"ytc/defs/bashdef"
 	"ytc/defs/collecttypedef"
 	"ytc/defs/errdef"
+	"ytc/i18n"
 	ytccollect "ytc/internal/modules/ytc/collect"
 	ytccollectcommons "ytc/internal/modules/ytc/collect/commons"
+	"ytc/internal/modules/ytc/collect/commons/i18nnames"
 	"ytc/log"
 	"ytc/utils/stringutil"
 	"ytc/utils/terminalutil/barutil"
@@ -44,7 +46,7 @@ func (c *CollecterHandler) Collect(yasdbValidate error) error {
 		log.Handler.Errorf(err.Error())
 		return err
 	}
-	fmt.Printf("\nStarting collect...\n\n")
+	fmt.Printf("\n%s\n\n", i18n.T("collect.starting"))
 	return c.collect(moduleItems)
 }
 
@@ -68,13 +70,13 @@ func (c *CollecterHandler) checkAccess(yasdbValidateErr error) (map[string][]ytc
 func (c *CollecterHandler) printNoAccessItem(m map[string][]ytccollectcommons.NoAccessRes) error {
 	table := tabler.NewTable(
 		"",
-		tabler.NewRowTitle("TYPE", 15),
-		tabler.NewRowTitle("COLLECT_ITEM", 25),
-		tabler.NewRowTitle("DESCRIPTION", 50),
-		tabler.NewRowTitle("TIPS", 50),
-		tabler.NewRowTitle("COLLECTED?", 15),
+		tabler.NewRowTitle(i18n.T("collect.header_type"), 15),
+		tabler.NewRowTitle(i18n.T("collect.header_item"), 25),
+		tabler.NewRowTitle(i18n.T("collect.header_desc"), 50),
+		tabler.NewRowTitle(i18n.T("collect.header_tips"), 50),
+		tabler.NewRowTitle(i18n.T("collect.header_collected"), 15),
 	)
-	fmt.Printf("%s\n\n", bashdef.WithYellow("There are some tips for you"))
+	fmt.Printf("%s\n\n", bashdef.WithYellow(i18n.T("collect.tips_for_you")))
 	var modules []string
 	for t := range m {
 		modules = append(modules, t)
@@ -82,15 +84,26 @@ func (c *CollecterHandler) printNoAccessItem(m map[string][]ytccollectcommons.No
 	sort.Strings(modules)
 	for _, module := range modules {
 		for i, noAccess := range m[module] {
+			// Translate module name based on type
+			moduleName := noAccess.ModuleItem
+			switch module {
+			case collecttypedef.TYPE_BASE:
+				moduleName = i18nnames.GetBaseInfoItemName(moduleName)
+			case collecttypedef.TYPE_DIAG:
+				moduleName = i18nnames.GetDiagItemName(moduleName)
+			case collecttypedef.TYPE_PERF:
+				moduleName = i18nnames.GetPerfItemName(moduleName)
+			}
+			
 			if i == 0 {
-				err := table.AddColumn(strings.ToUpper(collecttypedef.GetTypeFullName(module)), noAccess.ModuleItem, noAccess.Description, noAccess.Tips, isCollectedStr(noAccess.ForceCollect))
+				err := table.AddColumn(strings.ToUpper(collecttypedef.GetTypeFullName(module)), moduleName, noAccess.Description, noAccess.Tips, isCollectedStr(noAccess.ForceCollect))
 				if err != nil {
 					log.Handler.Errorf("add column err: %s", err.Error())
 					return err
 				}
 				continue
 			}
-			if err := table.AddColumn("", noAccess.ModuleItem, noAccess.Description, noAccess.Tips, isCollectedStr(noAccess.ForceCollect)); err != nil {
+			if err := table.AddColumn("", moduleName, noAccess.Description, noAccess.Tips, isCollectedStr(noAccess.ForceCollect)); err != nil {
 				log.Module.Errorf("add column err: %s", err.Error())
 				return err
 			}
@@ -98,7 +111,7 @@ func (c *CollecterHandler) printNoAccessItem(m map[string][]ytccollectcommons.No
 	}
 	table.Print()
 	var isConfirm string
-	fmt.Printf("\nAre you want continue collect [y/n] ?\n")
+	fmt.Printf(i18n.T("collect.continue_confirm"))
 	fmt.Scanln(&isConfirm)
 
 	// record input
@@ -106,7 +119,7 @@ func (c *CollecterHandler) printNoAccessItem(m map[string][]ytccollectcommons.No
 
 	isConfirm = strings.ToLower(isConfirm)
 	if isConfirm != "y" {
-		return fmt.Errorf("some validations failed, not continue collect")
+		return fmt.Errorf(i18n.T("collect.validation_failed"))
 	}
 	return nil
 }
@@ -137,7 +150,18 @@ func (c *CollecterHandler) printCollectItem(typeItem map[string][]string) error 
 		row := make([]interface{}, len(moduleNames))
 		for j, item := range moduleItems {
 			if i < len(item) {
-				row[j] = item[i]
+				// Translate module name based on type
+				moduleName := item[i]
+				moduleType := moduleNames[j]
+				switch moduleType {
+				case collecttypedef.TYPE_BASE:
+					moduleName = i18nnames.GetBaseInfoItemName(moduleName)
+				case collecttypedef.TYPE_DIAG:
+					moduleName = i18nnames.GetDiagItemName(moduleName)
+				case collecttypedef.TYPE_PERF:
+					moduleName = i18nnames.GetPerfItemName(moduleName)
+				}
+				row[j] = moduleName
 				continue
 			}
 			row[j] = " "
@@ -146,7 +170,7 @@ func (c *CollecterHandler) printCollectItem(typeItem map[string][]string) error 
 			return err
 		}
 	}
-	fmt.Printf("%s\n\n", bashdef.WithBlue("The following modules will be collected"))
+	fmt.Printf("%s\n\n", bashdef.WithBlue(i18n.T("collect.following_modules")))
 	table.Print()
 	return nil
 }
@@ -212,15 +236,17 @@ func (c *CollecterHandler) CollectOK() error {
 	for _, collecter := range c.Collecters {
 		c.CollectResult.Modules[collecter.Type()] = collecter.CollectOK()
 	}
-	fmt.Printf("Packing collected results, please wait for a moment...\n\n")
+	fmt.Printf("%s\n\n", i18n.T("collect.packing_results"))
 	path, err := c.CollectResult.GenResult(c.CollectResult.CollectParam.Output, c.Types)
 	if err != nil {
-		err = fmt.Errorf("failed to gen result, err: %v", err)
+		err = fmt.Errorf(i18n.TWithData("collect.gen_result_failed", map[string]interface{}{"Err": err}))
 		log.Handler.Error(err)
 		fmt.Println(err.Error())
 		return err
 	}
-	fmt.Printf("The collection has been %s and the result was saved to %s, thanks for your use.\n", bashdef.WithGreen("completed"), bashdef.WithBlue(path))
+	status := bashdef.WithGreen(i18n.T("collect.completed"))
+	pathStr := bashdef.WithBlue(path)
+	fmt.Println(i18n.TWithData("collect.completed_msg", map[string]interface{}{"Status": status, "Path": pathStr}))
 	return nil
 }
 

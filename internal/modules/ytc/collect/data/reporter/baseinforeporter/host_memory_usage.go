@@ -8,10 +8,12 @@ import (
 	"time"
 
 	"ytc/defs/timedef"
+	"ytc/i18n"
 	"ytc/internal/modules/ytc/collect/baseinfo"
 	"ytc/internal/modules/ytc/collect/baseinfo/gopsutil"
 	"ytc/internal/modules/ytc/collect/baseinfo/sar"
 	"ytc/internal/modules/ytc/collect/commons/datadef"
+	"ytc/internal/modules/ytc/collect/commons/i18nnames"
 	"ytc/internal/modules/ytc/collect/data/reporter/commons"
 	"ytc/internal/modules/ytc/collect/resultgenner/reporter"
 	"ytc/internal/modules/ytc/collect/resultgenner/reporter/htmldef"
@@ -24,23 +26,19 @@ import (
 )
 
 const (
-	_graph_name_memory_usage = "内存使用率"
-
 	_graph_history_memory_usage = "history_memory_usage"
 	_graph_current_memory_usage = "current_memory_usage"
 )
 
 const (
 	// keys
-	_key_real_usage = "real_usage"
-
-	// labels
-	_label_real_usage = "真实使用率"
+	_key_time_mem       = "time"
+	_key_usage_mem      = "usage"
+	_key_real_usage_mem = "real_usage"
 )
 
 var (
-	_yKeysMemory   = []string{_key_usage, _key_real_usage}
-	_yLabelsMemory = []string{_label_usage, _label_real_usage}
+	_yKeysMemory = []string{_key_usage_mem, _key_real_usage_mem}
 )
 
 // validate interface
@@ -64,7 +62,7 @@ func NewHostMemoryUsageReporter() HostMemoryUsageReporter {
 
 // [Interface Func]
 func (r HostMemoryUsageReporter) Report(item datadef.YTCItem, titlePrefix string) (content reporter.ReportContent, err error) {
-	title := fmt.Sprintf("%s %s", titlePrefix, baseinfo.BaseInfoChineseName[item.Name])
+	title := fmt.Sprintf("%s %s", titlePrefix, i18nnames.GetBaseInfoItemName(item.Name))
 	fontSize := reporter.FONT_SIZE_H2
 	txt := reporter.GenTxtTitle(title)
 	markdown := reporter.GenMarkdownTitle(title, fontSize)
@@ -167,20 +165,20 @@ func (r HostMemoryUsageReporter) genSarReportContent(sarData map[int64]map[strin
 
 	tw := commons.ReporterWriter.NewTableWriter()
 	tw.AppendHeader(table.Row{
-		"时间",
-		"总内存",
-		"空闲内存",
-		"已使用",
-		"使用率",
-		"缓冲(buffers)",
-		"缓存(cache)",
-		"可用",
-		"已提交",
-		"已提交的内存占总内存的百分比",
-		"活跃内存的大小",
-		"非活跃内存的大小",
-		"已修改但尚未写入磁盘的脏页大小",
-		"真实内存使用率",
+		i18n.T("report.memory_table_time"),
+		i18n.T("report.memory_table_total"),
+		i18n.T("report.memory_table_free"),
+		i18n.T("report.memory_table_used_memory"),
+		i18n.T("report.memory_table_usage_percent"),
+		i18n.T("report.memory_table_buffers"),
+		i18n.T("report.memory_table_cache"),
+		i18n.T("report.memory_table_available"),
+		i18n.T("report.memory_table_commit"),
+		i18n.T("report.memory_table_commit_percent"),
+		i18n.T("report.memory_table_active"),
+		i18n.T("report.memory_table_inactive"),
+		i18n.T("report.memory_table_dirty"),
+		i18n.T("report.memory_table_real_usage"),
 	})
 	for _, key := range keys {
 		var rows []map[string]interface{}
@@ -207,17 +205,17 @@ func (r HostMemoryUsageReporter) genSarReportContent(sarData map[int64]map[strin
 				fmt.Sprintf("%.2f%%", p.RealMemUsed),
 			})
 			row := make(map[string]interface{})
-			row[_key_time] = time.Unix(p.timestamp, 0).Format(timedef.TIME_FORMAT)
-			row[_key_usage] = numutil.TruncateFloat64(p.MemUsed, 2)
-			row[_key_real_usage] = numutil.TruncateFloat64(p.RealMemUsed, 2)
+			row[_key_time_mem] = time.Unix(p.timestamp, 0).Format(timedef.TIME_FORMAT)
+			row[_key_usage_mem] = numutil.TruncateFloat64(p.MemUsed, 2)
+			row[_key_real_usage_mem] = numutil.TruncateFloat64(p.RealMemUsed, 2)
 			rows = append(rows, row)
 		}
 		c := reporter.GenReportContentByWriter(tw)
 		content.Txt += c.Txt + stringutil.STR_NEWLINE
 		content.Markdown += c.Markdown + stringutil.STR_NEWLINE
 		content.HTML += c.HTML + stringutil.STR_NEWLINE
-		content.HTML += reporter.GenHTMLTitle(_graph_name_memory_usage, reporter.FONT_SIZE_H4) + htmldef.GenGraphElement(graphName)
-		content.Graph = htmldef.GenGraphData(graphName, rows, _key_time, _yKeysMemory, _yLabelsMemory)
+		content.HTML += reporter.GenHTMLTitle(i18n.T("report.graph_memory_usage"), reporter.FONT_SIZE_H4) + htmldef.GenGraphElement(graphName)
+		content.Graph = htmldef.GenGraphData(graphName, rows, _key_time_mem, _yKeysMemory, []string{i18n.T("report.label_usage"), i18n.T("report.label_real_usage")})
 		tw.ResetRows()
 	}
 	return
@@ -243,17 +241,17 @@ func (r HostMemoryUsageReporter) genGopsutilReportContent(gopsutilData map[int64
 
 	tw := commons.ReporterWriter.NewTableWriter()
 	tw.AppendHeader(table.Row{
-		"时间",
-		"总内存",
-		"空闲内存",
-		"已使用",
-		"使用率",
-		"缓冲(buffers)",
-		"缓存(cache)",
-		"可用",
-		"系统可保证的总内存使用量",
-		"虚拟内存总大小",
-		"虚拟内存已使用",
+		i18n.T("report.memory_gopsutil_time"),
+		i18n.T("report.memory_gopsutil_total"),
+		i18n.T("report.memory_gopsutil_free"),
+		i18n.T("report.memory_gopsutil_used"),
+		i18n.T("report.memory_gopsutil_usage_percent"),
+		i18n.T("report.memory_gopsutil_buffers"),
+		i18n.T("report.memory_gopsutil_cache"),
+		i18n.T("report.memory_gopsutil_available"),
+		i18n.T("report.memory_gopsutil_commit_limit"),
+		i18n.T("report.memory_gopsutil_swap_total"),
+		i18n.T("report.memory_gopsutil_swap_used"),
 	})
 	for _, key := range keys {
 		var rows []map[string]interface{}
@@ -276,24 +274,24 @@ func (r HostMemoryUsageReporter) genGopsutilReportContent(gopsutilData map[int64
 				size.GenHumanReadableSize(float64(p.VMallocUsed), 2),
 			})
 			row := make(map[string]interface{})
-			row[_key_time] = time.Unix(p.timestamp, 0).Format(timedef.TIME_FORMAT)
-			row[_key_usage] = numutil.TruncateFloat64(p.UsedPercent, 2)
-			row[_key_usage] = numutil.TruncateFloat64(float64(p.Available/p.Total), 2)
+			row[_key_time_mem] = time.Unix(p.timestamp, 0).Format(timedef.TIME_FORMAT)
+			row[_key_usage_mem] = numutil.TruncateFloat64(p.UsedPercent, 2)
+			row[_key_real_usage_mem] = numutil.TruncateFloat64(float64(p.Available/p.Total), 2)
 			rows = append(rows, row)
 		}
 		c := reporter.GenReportContentByWriter(tw)
 		content.Txt += c.Txt + stringutil.STR_NEWLINE
 		content.Markdown += c.Markdown + stringutil.STR_NEWLINE
 		content.HTML += c.HTML + stringutil.STR_NEWLINE
-		content.HTML += reporter.GenHTMLTitle(_graph_name_memory_usage, reporter.FONT_SIZE_H4) + htmldef.GenGraphElement(graphName)
-		content.Graph = htmldef.GenGraphData(graphName, rows, _key_time, _yKeysMemory, _yLabelsMemory)
+		content.HTML += reporter.GenHTMLTitle(i18n.T("report.graph_memory_usage"), reporter.FONT_SIZE_H4) + htmldef.GenGraphElement(graphName)
+		content.Graph = htmldef.GenGraphData(graphName, rows, _key_time_mem, _yKeysMemory, []string{i18n.T("report.label_usage"), i18n.T("report.label_real_usage")})
 		tw.ResetRows()
 	}
 	return
 }
 
 func (r HostMemoryUsageReporter) genHistoryContent(historyItem datadef.YTCItem, titlePrefix string) (historyItemContent reporter.ReportContent, err error) {
-	title := fmt.Sprintf("%s.1 %s", titlePrefix, baseinfo.BaseInfoChildChineseName[baseinfo.KEY_HISTORY])
+	title := fmt.Sprintf("%s.1 %s", titlePrefix, i18nnames.GetBaseInfoChildItemName(baseinfo.KEY_HISTORY))
 	fontSize := reporter.FONT_SIZE_H3
 	if len(historyItem.Error) != 0 {
 		ew := commons.ReporterWriter.NewErrorWriter(historyItem.Error, historyItem.Description)
@@ -315,7 +313,7 @@ func (r HostMemoryUsageReporter) genHistoryContent(historyItem datadef.YTCItem, 
 }
 
 func (r HostMemoryUsageReporter) genCurrentContent(currentItem datadef.YTCItem, titlePrefix string) (currentItemContent reporter.ReportContent, err error) {
-	title := fmt.Sprintf("%s.2 %s", titlePrefix, baseinfo.BaseInfoChildChineseName[baseinfo.KEY_CURRENT])
+	title := fmt.Sprintf("%s.2 %s", titlePrefix, i18nnames.GetBaseInfoChildItemName(baseinfo.KEY_CURRENT))
 	fontSize := reporter.FONT_SIZE_H3
 	if len(currentItem.Error) != 0 {
 		ew := commons.ReporterWriter.NewErrorWriter(currentItem.Error, currentItem.Description)

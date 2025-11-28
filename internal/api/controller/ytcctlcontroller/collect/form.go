@@ -1,12 +1,12 @@
 package collect
 
 import (
-	"fmt"
 	"os"
 	"path"
 	"strings"
 
 	constdef "ytc/defs/constants"
+	"ytc/i18n"
 	ytccollectcommons "ytc/internal/modules/ytc/collect/commons"
 	"ytc/internal/modules/ytc/collect/yasdb"
 	"ytc/log"
@@ -16,13 +16,7 @@ import (
 )
 
 const (
-	SAVE = "Save"
-	QUIT = "Quit"
-
-	FORM_HEADER = "Enter Yashan Trace Collector Data"
-
 	base_yasdb_process_format       = `.*yasdb (?i:(nomount|mount|open))`
-	yasdb_internal_data_not_collect = "yasdb internal data will not be collected, are you sure to continue?"
 )
 
 var (
@@ -36,9 +30,9 @@ func (c *CollectCmd) openYasdbCollectForm() (*yasdb.YasdbEnv, int) {
 	opts = append(opts, func(c *terminalutil.CollectForm) { c.AddInput(constdef.YASDB_DATA, yasdbData, validatePath) })
 	opts = append(opts, func(c *terminalutil.CollectForm) { c.AddInput(constdef.YASDB_USER, "", nil) })
 	opts = append(opts, func(c *terminalutil.CollectForm) { c.AddPassword(constdef.YASDB_PASSWORD, "", nil) })
-	opts = append(opts, func(c *terminalutil.CollectForm) { c.AddButton(SAVE, saveFunc) })
-	opts = append(opts, func(c *terminalutil.CollectForm) { c.AddButton(QUIT, quitFunc) })
-	form := terminalutil.NewCollectFrom(FORM_HEADER, opts...)
+	opts = append(opts, func(c *terminalutil.CollectForm) { c.AddButton(i18n.T("form.save"), saveFunc) })
+	opts = append(opts, func(c *terminalutil.CollectForm) { c.AddButton(i18n.T("form.quit"), quitFunc) })
+	form := terminalutil.NewCollectFrom(i18n.T("form.enter_header"), opts...)
 	form.Start()
 	yasdbEnv, err := getYasdbEnvFromForm(form)
 	if err != nil {
@@ -62,7 +56,7 @@ func getYasdbEnvFromForm(c *terminalutil.CollectForm) (*yasdb.YasdbEnv, error) {
 
 func validatePath(label, value string) (bool, string) {
 	if stringutil.IsEmpty(value) {
-		return false, fmt.Sprintf("please enter %s", label)
+		return false, i18n.TWithData("form.please_enter", map[string]interface{}{"Label": label})
 	}
 	if _, err := os.Stat(value); err != nil {
 		return false, err.Error()
@@ -85,7 +79,7 @@ func saveFunc(c *terminalutil.CollectForm) {
 		log.Controller.Errorf("validate yasdb err: %s", err.Error())
 		YasdbValidate = err
 		desc, _ := ytccollectcommons.YasErrDescAndTips(err)
-		desc = strings.Join([]string{desc, yasdb_internal_data_not_collect}, ", ")
+		desc = strings.Join([]string{desc, i18n.T("form.yasdb_internal_data_not_collect")}, ", ")
 		c.ConfrimExit(desc)
 		return
 	}

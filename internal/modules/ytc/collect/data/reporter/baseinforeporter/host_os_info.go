@@ -6,8 +6,9 @@ import (
 	"time"
 
 	"ytc/defs/timedef"
-	"ytc/internal/modules/ytc/collect/baseinfo"
+	"ytc/i18n"
 	"ytc/internal/modules/ytc/collect/commons/datadef"
+	"ytc/internal/modules/ytc/collect/commons/i18nnames"
 	"ytc/internal/modules/ytc/collect/data/reporter/commons"
 	"ytc/internal/modules/ytc/collect/resultgenner/reporter"
 
@@ -27,7 +28,7 @@ func NewHostOSInfoReporter() HostOSInfoReporter {
 
 // [Interface Func]
 func (r HostOSInfoReporter) Report(item datadef.YTCItem, titlePrefix string) (content reporter.ReportContent, err error) {
-	title := fmt.Sprintf("%s %s", titlePrefix, baseinfo.BaseInfoChineseName[item.Name])
+	title := fmt.Sprintf("%s %s", titlePrefix, i18nnames.GetBaseInfoItemName(item.Name))
 	fontSize := reporter.FONT_SIZE_H2
 
 	// report error
@@ -75,23 +76,23 @@ func (r HostOSInfoReporter) parseHostInfo(item datadef.YTCItem) (hostInfo *host.
 
 func (r HostOSInfoReporter) genReportContentWriter(hostInfo *host.InfoStat) reporter.Writer {
 	tw := commons.ReporterWriter.NewTableWriter()
-	tw.AppendHeader(table.Row{"检查项", "检查结果"})
+	tw.AppendHeader(table.Row{i18n.T("report.table_check_item"), i18n.T("report.table_check_result")})
 
-	tw.AppendRow(table.Row{"主机名称", hostInfo.Hostname})
+	tw.AppendRow(table.Row{i18n.T("report.field_hostname"), hostInfo.Hostname})
 	tw.AppendSeparator()
 
-	tw.AppendRow(table.Row{"开机时间", time.Unix(int64(hostInfo.BootTime), 0).Format(timedef.TIME_FORMAT)})
+	tw.AppendRow(table.Row{i18n.T("report.field_boot_time"), time.Unix(int64(hostInfo.BootTime), 0).Format(timedef.TIME_FORMAT)})
 	tw.AppendSeparator()
 
-	tw.AppendRow(table.Row{"操作系统", hostInfo.OS})
+	tw.AppendRow(table.Row{i18n.T("report.field_os"), hostInfo.OS})
 	tw.AppendSeparator()
 
-	tw.AppendRow(table.Row{"发行版本", fmt.Sprintf("%s %s (%s系列)", hostInfo.Platform, hostInfo.PlatformVersion, hostInfo.PlatformFamily)})
+	tw.AppendRow(table.Row{i18n.T("report.field_platform"), fmt.Sprintf("%s %s (%s%s)", hostInfo.Platform, hostInfo.PlatformVersion, hostInfo.PlatformFamily, i18n.T("report.field_platform_family"))})
 	tw.AppendSeparator()
 
-	tw.AppendRow(table.Row{"内核版本", hostInfo.KernelVersion})
+	tw.AppendRow(table.Row{i18n.T("report.field_kernel_version"), hostInfo.KernelVersion})
 	tw.AppendSeparator()
 
-	tw.AppendRow(table.Row{"内核架构", hostInfo.KernelArch})
+	tw.AppendRow(table.Row{i18n.T("report.field_kernel_arch"), hostInfo.KernelArch})
 	return tw
 }

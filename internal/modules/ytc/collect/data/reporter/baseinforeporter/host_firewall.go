@@ -3,8 +3,9 @@ package baseinforeporter
 import (
 	"fmt"
 
-	"ytc/internal/modules/ytc/collect/baseinfo"
+	"ytc/i18n"
 	"ytc/internal/modules/ytc/collect/commons/datadef"
+	"ytc/internal/modules/ytc/collect/commons/i18nnames"
 	"ytc/internal/modules/ytc/collect/data/reporter/commons"
 	"ytc/internal/modules/ytc/collect/resultgenner/reporter"
 
@@ -22,7 +23,7 @@ func NewHostFirewallReporterReporter() HostFirewallReporter {
 
 // [Interface Func]
 func (r HostFirewallReporter) Report(item datadef.YTCItem, titlePrefix string) (content reporter.ReportContent, err error) {
-	title := fmt.Sprintf("%s %s", titlePrefix, baseinfo.BaseInfoChineseName[item.Name])
+	title := fmt.Sprintf("%s %s", titlePrefix, i18nnames.GetBaseInfoItemName(item.Name))
 	fontSize := reporter.FONT_SIZE_H2
 
 	// report error
@@ -44,10 +45,10 @@ func (r HostFirewallReporter) Report(item datadef.YTCItem, titlePrefix string) (
 
 func (r HostFirewallReporter) genReportContentWriter(isFirewallStatusActive bool) reporter.Writer {
 	tw := commons.ReporterWriter.NewTableWriter()
-	tw.AppendHeader(table.Row{"防火墙状态"})
-	message := "已关闭"
+	tw.AppendHeader(table.Row{i18n.T("report.table_firewall_status")})
+	message := i18n.T("report.status_disabled")
 	if isFirewallStatusActive {
-		message = "已开启"
+		message = i18n.T("report.status_enabled")
 	}
 	tw.AppendRow(table.Row{message})
 	return tw

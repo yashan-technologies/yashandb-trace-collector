@@ -4,8 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"ytc/internal/modules/ytc/collect/baseinfo"
+	"ytc/i18n"
 	"ytc/internal/modules/ytc/collect/commons/datadef"
+	"ytc/internal/modules/ytc/collect/commons/i18nnames"
 	"ytc/internal/modules/ytc/collect/data/reporter/commons"
 	"ytc/internal/modules/ytc/collect/resultgenner/reporter"
 
@@ -26,7 +27,7 @@ func NewHostMemoryReporter() HostMemoryReporter {
 
 // [Interface Func]
 func (r HostMemoryReporter) Report(item datadef.YTCItem, titlePrefix string) (content reporter.ReportContent, err error) {
-	title := fmt.Sprintf("%s %s", titlePrefix, baseinfo.BaseInfoChineseName[item.Name])
+	title := fmt.Sprintf("%s %s", titlePrefix, i18nnames.GetBaseInfoItemName(item.Name))
 	fontSize := reporter.FONT_SIZE_H2
 
 	// report error
@@ -76,16 +77,16 @@ func (r HostMemoryReporter) genReportContentWriter(memory *mem.VirtualMemoryStat
 	tw := commons.ReporterWriter.NewTableWriter()
 	tw.AppendHeader(table.Row{
 		"",
-		"内存大小",
-		"已使用",
-		"空闲",
-		"共享内存",
-		"缓冲/缓存",
-		"可用",
+		i18n.T("report.field_memory_size"),
+		i18n.T("report.field_used"),
+		i18n.T("report.field_free"),
+		i18n.T("report.field_shared_memory"),
+		i18n.T("report.field_buffer_cache"),
+		i18n.T("report.field_available"),
 	})
 
 	tw.AppendRow(table.Row{
-		"系统内存",
+		i18n.T("report.field_system_memory"),
 		size.GenHumanReadableSize(float64(memory.Total), 2),
 		size.GenHumanReadableSize(float64(memory.Used), 2),
 		size.GenHumanReadableSize(float64(memory.Free), 2),
@@ -97,7 +98,7 @@ func (r HostMemoryReporter) genReportContentWriter(memory *mem.VirtualMemoryStat
 
 	swapUsed := memory.SwapTotal - memory.SwapFree - memory.SwapCached
 	tw.AppendRow(table.Row{
-		"交换分区",
+		i18n.T("report.field_swap_memory"),
 		size.GenHumanReadableSize(float64(memory.SwapTotal), 2),
 		size.GenHumanReadableSize(float64(swapUsed), 2),
 		size.GenHumanReadableSize(float64(memory.SwapFree), 2),

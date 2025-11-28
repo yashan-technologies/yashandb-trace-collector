@@ -1,19 +1,23 @@
 module ytc
 
-go 1.19
+go 1.23.0
+
+toolchain go1.23.2
 
 require (
 	git.yasdb.com/go/yaserr v0.1.0
 	git.yasdb.com/go/yaslog v0.0.0-20230531092234-0b27ba7c86fe
 	git.yasdb.com/go/yasutil v0.0.0-20230818021849-5f75a4471763
-	github.com/BurntSushi/toml v1.3.2
+	github.com/BurntSushi/toml v1.5.0
 	github.com/alecthomas/kong v0.8.0
 	github.com/gdamore/tcell/v2 v2.6.0
 	github.com/jedib0t/go-pretty/v6 v6.4.6
+	github.com/nicksnyder/go-i18n/v2 v2.6.0
 	github.com/rivo/tview v0.0.0-20230621164836-6cc0565babaf
 	github.com/shirou/gopsutil v3.21.11+incompatible
 	github.com/shopspring/decimal v1.3.1
 	github.com/vbauerster/mpb/v8 v8.5.2
+	golang.org/x/text v0.23.0
 	gopkg.in/ini.v1 v1.67.0
 )
 
@@ -31,5 +35,4 @@ require (
 	github.com/yusufpapurcu/wmi v1.2.3 // indirect
 	golang.org/x/sys v0.11.0 // indirect
 	golang.org/x/term v0.5.0 // indirect
-	golang.org/x/text v0.7.0 // indirect
 )

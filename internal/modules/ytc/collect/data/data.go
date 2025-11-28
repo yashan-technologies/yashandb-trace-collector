@@ -7,13 +7,12 @@ import (
 
 	"ytc/defs/collecttypedef"
 	"ytc/defs/timedef"
-	"ytc/internal/modules/ytc/collect/baseinfo"
+	"ytc/i18n"
 	"ytc/internal/modules/ytc/collect/commons/datadef"
+	"ytc/internal/modules/ytc/collect/commons/i18nnames"
 	report "ytc/internal/modules/ytc/collect/data/reporter"
 	"ytc/internal/modules/ytc/collect/data/reporter/commons"
-	"ytc/internal/modules/ytc/collect/diagnosis"
 	"ytc/internal/modules/ytc/collect/extra"
-	"ytc/internal/modules/ytc/collect/performance"
 	"ytc/internal/modules/ytc/collect/resultgenner"
 	"ytc/internal/modules/ytc/collect/resultgenner/reporter"
 	"ytc/internal/modules/ytc/collect/resultgenner/reporter/htmldef"
@@ -62,7 +61,7 @@ func (r *YTCReport) GenReport() (content reporter.ReportContent, err error) {
 		moduleNum++
 
 		moduleTitlePrefix := fmt.Sprintf("%d", moduleNum)
-		moduleContent := reporter.GenReportContentByTitle(fmt.Sprintf("%s %s", moduleTitlePrefix, collecttypedef.CollectTypeChineseName[moduleName]), reporter.FONT_SIZE_H1)
+		moduleContent := reporter.GenReportContentByTitle(fmt.Sprintf("%s %s", moduleTitlePrefix, collecttypedef.GetModuleName(moduleName)), reporter.FONT_SIZE_H1)
 		content.Txt += moduleContent.Txt
 		content.Markdown += moduleContent.Markdown
 		content.HTML += moduleContent.HTML
@@ -127,7 +126,7 @@ func (r *YTCReport) GetPackageDir() string {
 }
 
 func (r *YTCReport) genReportOverview() (content reporter.ReportContent) {
-	titleContent := reporter.GenReportContentByTitle("报告概览", reporter.FONT_SIZE_H1)
+	titleContent := reporter.GenReportContentByTitle(i18n.T("report.overview_title"), reporter.FONT_SIZE_H1)
 	genTableRows := func(sep string) []table.Row {
 		user := r.CollectParam.YasdbUser
 		if stringutil.IsEmpty(user) {
@@ -136,32 +135,36 @@ func (r *YTCReport) genReportOverview() (content reporter.ReportContent) {
 		var modules []string
 		for _, m := range _moduleOrder {
 			if _, ok := r.Modules[m]; ok {
-				modules = append(modules, collecttypedef.CollectTypeChineseName[m])
+				modules = append(modules, collecttypedef.GetModuleName(m))
 			}
 		}
+		separator := "，"
+		if r.CollectParam.Lang == "en" {
+			separator = ", "
+		}
 		rows := []table.Row{
-			{"收集类型", strings.Join(modules, "，")},
-			{"收集范围--起始时间", r.CollectParam.StartTime.Format(timedef.TIME_FORMAT_UNTIL_MINITE)},
-			{"收集范围--截止时间", r.CollectParam.EndTime.Format(timedef.TIME_FORMAT_UNTIL_MINITE)},
-			{"YashanDB信息--YASDB_HOME", r.CollectParam.YasdbHome},
-			{"YashanDB信息--YASDB_DATA", r.CollectParam.YasdbData},
-			{"数据库用户(用于收集YashanDB信息)", user},
+			{i18n.T("report.collect_type"), strings.Join(modules, separator)},
+			{i18n.T("report.collect_range_start"), r.CollectParam.StartTime.Format(timedef.TIME_FORMAT_UNTIL_MINITE)},
+			{i18n.T("report.collect_range_end"), r.CollectParam.EndTime.Format(timedef.TIME_FORMAT_UNTIL_MINITE)},
+			{i18n.T("report.yasdb_home"), r.CollectParam.YasdbHome},
+			{i18n.T("report.yasdb_data"), r.CollectParam.YasdbData},
+			{i18n.T("report.database_user"), user},
 		}
 		if len(r.CollectParam.Include) > 0 {
-			rows = append(rows, table.Row{"额外的收集文件", strings.Join(r.CollectParam.Include, sep)})
+			rows = append(rows, table.Row{i18n.T("report.extra_files"), strings.Join(r.CollectParam.Include, sep)})
 		}
 		if len(r.CollectParam.Exclude) > 0 {
-			rows = append(rows, table.Row{"过滤的收集文件", strings.Join(r.CollectParam.Exclude, sep)})
+			rows = append(rows, table.Row{i18n.T("report.filtered_files"), strings.Join(r.CollectParam.Exclude, sep)})
 		}
-		rows = append(rows, table.Row{"收集结果存放目录", r.CollectParam.Output})
-		rows = append(rows, table.Row{"任务开始时间", r.CollectBeginTime.Format(timedef.TIME_FORMAT)})
-		rows = append(rows, table.Row{"任务结束时间", r.CollectEndTime.Format(timedef.TIME_FORMAT)})
+		rows = append(rows, table.Row{i18n.T("report.output_dir"), r.CollectParam.Output})
+		rows = append(rows, table.Row{i18n.T("report.task_start_time"), r.CollectBeginTime.Format(timedef.TIME_FORMAT)})
+		rows = append(rows, table.Row{i18n.T("report.task_end_time"), r.CollectEndTime.Format(timedef.TIME_FORMAT)})
 		return rows
 	}
 
 	tw := commons.ReporterWriter.NewTableWriter()
-	tw.AppendHeader(table.Row{"概览项", "概览值"})
-	baseInfoTitle := reporter.GenReportContentByTitle("基础概览", reporter.FONT_SIZE_H2)
+	tw.AppendHeader(table.Row{i18n.T("report.overview_item"), i18n.T("report.overview_value")})
+	baseInfoTitle := reporter.GenReportContentByTitle(i18n.T("report.basic_overview"), reporter.FONT_SIZE_H2)
 
 	// render txt
 	for _, r := range genTableRows(stringutil.STR_NEWLINE) {
@@ -181,14 +184,14 @@ func (r *YTCReport) genReportOverview() (content reporter.ReportContent) {
 func (r *YTCReport) genModulesAndItems() (modules []string, items [][]string) {
 	for _, m := range _moduleOrder {
 		if module, ok := r.Modules[m]; ok {
-			modules = append(modules, collecttypedef.CollectTypeChineseName[m])
+			modules = append(modules, collecttypedef.GetModuleName(m))
 			tmpItems := module.Items()
 			switch module.Module {
 			case collecttypedef.TYPE_BASE:
 				var names []string
 				for _, item := range _baseItemOrder {
 					if _, ok := tmpItems[item]; ok {
-						names = append(names, baseinfo.BaseInfoChineseName[item])
+						names = append(names, i18nnames.GetBaseInfoItemName(item))
 					}
 				}
 				items = append(items, names)
@@ -196,7 +199,7 @@ func (r *YTCReport) genModulesAndItems() (modules []string, items [][]string) {
 				var names []string
 				for _, item := range _diagItemOrder {
 					if _, ok := tmpItems[item]; ok {
-						names = append(names, diagnosis.DiagChineseName[item])
+						names = append(names, i18nnames.GetDiagItemName(item))
 					}
 				}
 				items = append(items, names)
@@ -204,7 +207,7 @@ func (r *YTCReport) genModulesAndItems() (modules []string, items [][]string) {
 				var names []string
 				for _, item := range _perfItemOrder {
 					if _, ok := tmpItems[item]; ok {
-						names = append(names, performance.PerformanceChineseName[item])
+						names = append(names, i18nnames.GetPerfItemName(item))
 					}
 				}
 				items = append(items, names)
@@ -225,7 +228,7 @@ func (r *YTCReport) genModulesAndItems() (modules []string, items [][]string) {
 }
 
 func (r *YTCReport) genReportItems() (content reporter.ReportContent) {
-	titleContent := reporter.GenReportContentByTitle("收集项概览", reporter.FONT_SIZE_H2)
+	titleContent := reporter.GenReportContentByTitle(i18n.T("report.items_overview"), reporter.FONT_SIZE_H2)
 	modules, items := r.genModulesAndItems()
 	var tableRow table.Row
 	for _, m := range modules {
