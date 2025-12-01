@@ -15,6 +15,7 @@ var _ytcConf Ytc
 type Ytc struct {
 	StrategyPath string `toml:"strategy_path"`
 	LogLevel     string `toml:"log_level"`
+	Language     string `toml:"language"`
 }
 
 func GetYTCConf() Ytc {

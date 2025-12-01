@@ -70,6 +70,7 @@ Flags:
   -h, --help                          Show context-sensitive help.
   -v, --version                       Show version.
   -c, --config="./config/ytc.toml"    Configuration file.
+  -l, --lang="zh"                     Language (en, zh).
 
 Commands:
   collect    The collect command is used to gather trace data.

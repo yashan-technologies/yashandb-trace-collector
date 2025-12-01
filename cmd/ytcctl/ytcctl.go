@@ -47,13 +47,21 @@ func initLogger(logPath, level string) error {
 }
 
 func initApp(app App) error {
-	i18n.InitI18n(app.Lang)
 	if err := runtimedef.InitRuntime(); err != nil {
 		return err
 	}
 	if err := confdef.InitConf(app.Config); err != nil {
 		return err
 	}
+	// 优先使用命令行参数指定的语言，如果命令行参数为默认值，则使用配置文件中的语言
+	lang := app.Lang
+	if lang == "" {
+		lang = confdef.GetYTCConf().Language
+	}
+	if lang == "" {
+		lang = "zh"
+	}
+	i18n.InitI18n(lang)
 	if err := initLogger(runtimedef.GetLogPath(), confdef.GetYTCConf().LogLevel); err != nil {
 		return err
 	}
